@@ -24,6 +24,7 @@ import {
   KeyboardVoice as KeyboardVoiceIcon,
   CancelOutlined as CancelOutlinedIcon
 } from '@mui/icons-material';
+import Image from 'next/image';
 
 export default function Home() {
   const [messages, setMessages] = useState<{ role: string; content: string; type?: string; files?: File[] }[]>([]);
@@ -257,17 +258,17 @@ export default function Home() {
   
     switch (fileExtension) {
       case 'pdf':
-        return <img src='/pdf-icon.png' alt="PDF" />;
+        return <Image src='/pdf-icon.png' alt="PDF" width={24} height={24} />;
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
-        return <img src='/gallery-icon.png' alt="File"/>;
+        return <Image src='/gallery-icon.png' alt="File" width={24} height={24}/>;
       case 'doc':
       case 'docx':
-        return <img src='/doc-icon.png' alt="Document" />;
+        return <Image src='/doc-icon.png' alt="Document" width={24} height={24}/>;
       default:
-        return <img src='/default-icon.png' alt="File" />;
+        return <Image src='/default-icon.png' alt="File" width={24} height={24}/>;
     }
   };
 
@@ -510,7 +511,7 @@ export default function Home() {
           )}
         </div>
       ),
-      name: files.length > 0 ? files.map(file => <p>{file.name}</p>) : (language === 'en' ? 'Attach files' : 'Dodaj priloge'),
+      name: files.length > 0 ? files.map(file => <p key={file.name}>{file.name}</p>) : (language === 'en' ? 'Attach files' : 'Dodaj priloge'),
       onClick: () => {
         const fileInput = document.getElementById('fileInput');
         if (fileInput) {
