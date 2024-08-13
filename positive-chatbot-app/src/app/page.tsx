@@ -9,10 +9,12 @@ import {
   SpeedDialIcon,
   SpeedDialAction,
   Button,
+  IconButton,
   Alert,
   Tooltip,
   Avatar,
-  Chip
+  Chip,
+  TextField
 } from '@mui/material';
 import {
   Send as SendIcon,
@@ -22,12 +24,14 @@ import {
   TipsAndUpdates as TipsAndUpdatesIcon,
   VolumeUp as VolumeUpIcon,
   KeyboardVoice as KeyboardVoiceIcon,
-  CancelOutlined as CancelOutlinedIcon
+  CancelOutlined as CancelOutlinedIcon,
+  ThumbUp as ThumbUpIcon,
+  ThumbDown as ThumbDownIcon
 } from '@mui/icons-material';
 import Image from 'next/image';
 
 export default function Home() {
-  const [messages, setMessages] = useState<{ role: string; content: string; type?: string; files?: File[] }[]>([]);
+  const [messages, setMessages] = useState<{ role: string; content: string; type?: string; files?: File[]; likeStatus?: 'Good' | 'Bad' | null; feedback?: string | null }[]>([]);
   const [userMessage, setUserMessage] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const [sessionId, setSessionId] = useState<string>('');
@@ -44,6 +48,10 @@ export default function Home() {
   const [language, setLanguage] = useState<string>('sr');
   const [showTypingIndicator, setShowTypingIndicator] = useState<boolean>(false);
   const [openSpeedDial, setOpenSpeedDial] = useState<boolean>(false);
+  const [feedback, setFeedback] = useState<string>('');
+  const [likeStatus, setLikeStatus] = useState<'Good' | 'Bad' | null>(null);
+  const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
+  const [feedbackError, setFeedbackError] = useState<string>('');
 
   useEffect(() => {
     const storedSessionId = sessionStorage.getItem('sessionId');
@@ -280,7 +288,9 @@ export default function Home() {
       content: userMessage,
       files: files,
     };
-    
+    setLikeStatus(null);
+    setFeedbackVisible(false);
+    setFeedbackError('');
     setUserMessage(''); 
     setFiles([]);
 
@@ -484,6 +494,80 @@ export default function Home() {
     return { __html: message.content };
   };
 
+  const handleLikeClick = async () => {
+    setLikeStatus('Good');
+    setFeedbackVisible(false);
+    const updatedMessages = [...messages];
+    const lastMessageIndex = updatedMessages.length - 1;
+    if (lastMessageIndex >= 0) {
+      updatedMessages[lastMessageIndex].likeStatus = 'Good';
+    }
+    
+    if (lastMessageIndex >= 0) {
+      const lastQuestion = updatedMessages[lastMessageIndex - 1]?.content || "";
+      const lastAnswer = updatedMessages[lastMessageIndex]?.content || "";
+
+      updatedMessages[lastMessageIndex].feedback = feedback;
+      setMessages(updatedMessages);
+  
+      try {
+        await axios.post('https://chatappdemobackend.azurewebsites.net/feedback', {
+          sessionId: sessionId,
+          likeStatus: 'Good',
+          feedback: 'Nije ostavljen komentar',
+          lastQuestion: lastQuestion,
+          lastAnswer: lastAnswer
+        });
+      } catch (error) {
+        console.error('Failed to send like status:', error);
+      }
+    }
+  };
+  
+  const handleDislikeClick = async () => {
+    setLikeStatus('Bad');
+    setFeedbackVisible(true);
+  };
+  
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFeedback(e.target.value);
+    setFeedbackError('');
+  };
+  
+  const handleFeedbackSubmit = async () => {
+    const updatedMessages = [...messages];
+    const lastMessageIndex = updatedMessages.length - 1;
+
+    if (!feedback) {
+        setFeedbackError('Potrebno je uneti komentar');
+        return;
+    }
+
+    if (lastMessageIndex >= 0) {
+        const lastQuestion = updatedMessages[lastMessageIndex - 1]?.content || "";
+        const lastAnswer = updatedMessages[lastMessageIndex]?.content || "";
+
+        updatedMessages[lastMessageIndex].feedback = feedback;
+
+        setMessages(updatedMessages);
+
+        try {
+            await axios.post('https://chatappdemobackend.azurewebsites.net/feedback', {
+                sessionId: sessionId,
+                status: 'Bad',
+                feedback: feedback,
+                lastQuestion: lastQuestion,
+                lastAnswer: lastAnswer
+            });
+        } catch (error) {
+            console.error('Failed to send feedback:', error);
+        }
+        setFeedbackVisible(false);
+        setFeedback('');
+        setFeedbackError('');
+    }
+};
+
   const actions = [
     { icon: <DeleteIcon />, name: (language === 'en' ? 'Delete' : 'Obriši'), onClick: handleClearChat },
     {
@@ -524,7 +608,7 @@ export default function Home() {
     { icon: <VolumeUpIcon style={{ color: audioResponse ? 'red' : 'inherit' }} />, name: audioResponse ? (language === 'en' ? 'Turn off assistant audio response' : 'Isključi audio odgovor asistenta') : (language === 'en' ? 'Turn on assistant audio response' : 'Slušaj odgovor asistenta'), onClick: handleAudioResponseClick },
   ];
 
-  return (
+   return (
     <div className="App">
       <div className="chat-container">
         <div className="messages">
@@ -566,13 +650,75 @@ export default function Home() {
                       )}
                       {message.role === 'assistant' && audioResponse && audioBase64 && index === messages.length - 1 && !isAssistantResponding && (
                         <audio controls autoPlay>
-                          <source src={`data:audio/mp4;base64,${audioBase64}`} type="audio/mp4" />
+                          <source src={`data:audio/webm;base64,${audioBase64}`} type="audio/webm" />
                           Your browser does not support the audio element.
                         </audio>
                       )}
                     </div>
                   </Tooltip>
                 )}
+              {message.role === 'assistant' && index === messages.length - 1 && (
+                <div className="feedback-buttons">
+                  <IconButton style={{ backgroundColor: '#2a2a2a', width: 5, height: 5, marginLeft: 10, marginTop: -5, marginBottom: 10}} 
+                    disabled={message.likeStatus === 'Bad'}
+                    onClick={handleLikeClick}
+                  >
+                    <ThumbUpIcon sx={{ fontSize: 21, color: likeStatus === 'Good' ? 'green' : 'inherit' }} />
+                  </IconButton>
+                  <IconButton style={{ backgroundColor: '#2a2a2a', marginLeft: 6, marginTop: -5, marginBottom: 10}}
+                    disabled={message.likeStatus === 'Good'}
+                    onClick={handleDislikeClick}
+                  >
+                    <ThumbDownIcon sx={{ fontSize: 21, color: likeStatus === 'Bad' ? 'red' : 'inherit' }} />
+                  </IconButton>
+                  {feedbackVisible && (
+                    <div className="feedback-form">
+                      <TextField
+                        label={language === 'en' ? 'Leave a comment' : 'Ostavi komentar'}
+                        variant="outlined"
+                        value={feedback}
+                        onChange={handleFeedbackChange}
+                        multiline
+                        rows={4}
+                        fullWidth
+                        sx={{
+                          '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                              borderColor: '#505050',
+                            },
+                            '&:hover fieldset': {
+                              borderColor: 'white',
+                            },
+                            '&.Mui-focused fieldset': {
+                              borderColor: 'white',
+                              
+                            },
+                            color: '#ffff'      
+                          },
+                          '& .MuiInputLabel-root': {
+                            color: '#ffff',
+                          },
+                          '& .MuiInputLabel-root.Mui-focused': {
+                            color: '#ffff',
+                          }
+                        }}
+                      />
+                      <Button onClick={handleFeedbackSubmit} 
+                        sx={{
+                          '&:hover': {
+                            backgroundColor: '#505050'
+                          },
+                          marginTop: 1.2,
+                          fontSize: 12
+                        }}>
+                        <SendIcon sx={{ fontSize: 14, marginRight: 1 }}/>
+                        Pošalji
+                      </Button>
+                      {feedbackError && <span style={{ color: 'red', marginLeft: '10px' }}>{feedbackError}</span>}
+                    </div>
+                  )}
+                </div>
+              )}
               </div>
             </div>
           ))}
@@ -597,7 +743,7 @@ export default function Home() {
                   key={index}
                   variant="outlined"
                   onClick={() => handleSuggestedQuestionClick(question)}
-                  style={{ marginBottom: '10px', borderColor: '#ffff' }}
+                  style={{ marginBottom: '10px', borderColor: 'white' }}
                 >
                   {question}
                 </Button>
@@ -612,7 +758,7 @@ export default function Home() {
               <div className="input-container">
                 <input
                   type="text"
-                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
+                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako vam mogu pomoći?'}
                   value={userMessage}
                   onChange={(e) => setUserMessage(e.target.value)}
                 />
@@ -621,9 +767,7 @@ export default function Home() {
                     <SendIcon />
                   </Button>
                 ) : (
-                  <Tooltip title={isRecording ? 
-                    (language === 'en' ? 'Click to stop recording' : 'Klikni da isključiš snimanje') : 
-                    (language === 'en' ? 'Click to start recording' : 'Klikni da započneš snimanje')}>
+                  <Tooltip title={language === 'en' ? 'Click to start recording' : 'Kliknite da započnete snimanje'}>
                     <Button
                       className={`send-button ${isRecording ? 'recording' : ''}`}
                       onClick={handleVoiceClick}
@@ -662,4 +806,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
