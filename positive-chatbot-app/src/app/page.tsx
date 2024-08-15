@@ -54,6 +54,40 @@ export default function Home() {
   const [feedbackError, setFeedbackError] = useState<string>('');
 
   useEffect(() => {
+    if (process.env.PRIMARY_BG_COLOR) {
+      document.documentElement.style.setProperty('--primary-bg-color', process.env.PRIMARY_BG_COLOR);
+    }
+  
+    if (process.env.PRIMARY_FONT_COLOR) {
+      document.documentElement.style.setProperty('--primary-font-color', process.env.PRIMARY_FONT_COLOR);
+    }
+  
+    if (process.env.USER_BG_COLOR) {
+      document.documentElement.style.setProperty('--user-bg-color', process.env.USER_BG_COLOR);
+    }
+  
+    if (process.env.ASSISTANT_BG_COLOR) {
+      document.documentElement.style.setProperty('--assistant-bg-color', process.env.ASSISTANT_BG_COLOR);
+    }
+  
+    if (process.env.BACKGROUND_IMAGE) {
+      document.documentElement.style.setProperty('--background-image', `url(${process.env.BACKGROUND_IMAGE})`);
+    }
+
+    if (process.env.AVATAR_IMAGE) {
+      document.documentElement.style.setProperty('--avatar-image', `url(${process.env.AVATAR_IMAGE})`);
+    }
+
+    if (process.env.PRIMARY_INPUTROW_COLOR) {
+      document.documentElement.style.setProperty('--primary-inputrow-color', process.env.PRIMARY_INPUTROW_COLOR);
+    }
+  
+    if (process.env.PRIMARY_SENDBUTTON_COLOR) {
+      document.documentElement.style.setProperty('--primary-sendbutton-color', `url(${process.env.PRIMARY_SENDBUTTON_COLOR})`);
+    }
+  }, []);
+
+  useEffect(() => {
     const storedSessionId = sessionStorage.getItem('sessionId');
     if (storedSessionId) {
       setSessionId(storedSessionId);
@@ -97,7 +131,7 @@ export default function Home() {
     actionOnClick();
   };
 
-  const handleAudioUpload = async (blob: Blob) => {
+  const handleAudioUpload = async (blob: any) => {
     const formData = new FormData();
     formData.append('blob', blob, 'blob.mp4');
     formData.append('session_id', sessionId);
@@ -244,6 +278,8 @@ export default function Home() {
     setFiles([]);
     setUserSuggestQuestions([]);
     setAudioBase64(null);
+    setSuggestQuestions(false);
+    setAudioResponse(false);
   };
 
   const handleSuggestQuestions = () => {
@@ -266,17 +302,17 @@ export default function Home() {
   
     switch (fileExtension) {
       case 'pdf':
-        return <Image src='/pdf-icon.png' alt="PDF" width={24} height={24} />;
+        return <Image src='/icons/pdf-icon.png' alt="PDF" width={24} height={24} />;
       case 'jpg':
       case 'jpeg':
       case 'png':
       case 'gif':
-        return <Image src='/gallery-icon.png' alt="File" width={24} height={24}/>;
+        return <Image src='/icons/gallery-icon.png' alt="File" width={24} height={24}/>;
       case 'doc':
       case 'docx':
-        return <Image src='/doc-icon.png' alt="Document" width={24} height={24}/>;
+        return <Image src='/icons/doc-icon.png' alt="Document" width={24} height={24}/>;
       default:
-        return <Image src='/default-icon.png' alt="File" width={24} height={24}/>;
+        return <Image src='/icons/default-icon.png' alt="File" width={24} height={24}/>;
     }
   };
 
@@ -618,7 +654,7 @@ export default function Home() {
                 <div className="assistant-avatar">
                   <Avatar
                     alt="3Pi"
-                    src="/avatar.jpg"
+                    src={process.env.AVATAR_IMAGE || '/avatar/positive-avatar.jpg'}
                     sx={{ width: 25, height: 25 }}
                   />
                 </div>
@@ -659,13 +695,13 @@ export default function Home() {
                 )}
               {message.role === 'assistant' && index === messages.length - 1 && (
                 <div className="feedback-buttons">
-                  <IconButton style={{ backgroundColor: '#2a2a2a', width: 5, height: 5, marginLeft: 10, marginTop: -5, marginBottom: 10}} 
+                  <IconButton style={{ backgroundColor: '#2a2a2a', width: 5, height: 5, marginLeft: 10, marginTop: 5, marginBottom: 10}} 
                     disabled={message.likeStatus === 'Bad'}
                     onClick={handleLikeClick}
                   >
                     <ThumbUpIcon sx={{ fontSize: 21, color: likeStatus === 'Good' ? 'green' : 'inherit' }} />
                   </IconButton>
-                  <IconButton style={{ backgroundColor: '#2a2a2a', marginLeft: 6, marginTop: -5, marginBottom: 10}}
+                  <IconButton style={{ backgroundColor: '#2a2a2a', marginLeft: 6, marginTop: 5, marginBottom: 10}}
                     disabled={message.likeStatus === 'Good'}
                     onClick={handleDislikeClick}
                   >
@@ -727,7 +763,7 @@ export default function Home() {
             <div className="assistant-avatar">
               <Avatar
                 alt="3Pi"
-                src="/avatar.jpg"
+                src={process.env.AVATAR_IMAGE || '/avatar/positive-avatar.jpg'}
                 sx={{ width: 25, height: 25 }}
               />
             </div>
@@ -767,7 +803,9 @@ export default function Home() {
                     <SendIcon />
                   </Button>
                 ) : (
-                  <Tooltip title={language === 'en' ? 'Click to start recording' : 'Kliknite da započnete snimanje'}>
+                  <Tooltip title={isRecording ? 
+                    (language === 'en' ? 'Click to stop recording' : 'Klikni da isključiš snimanje') : 
+                    (language === 'en' ? 'Click to start recording' : 'Klikni da započneš snimanje')}>
                     <Button
                       className={`send-button ${isRecording ? 'recording' : ''}`}
                       onClick={handleVoiceClick}
