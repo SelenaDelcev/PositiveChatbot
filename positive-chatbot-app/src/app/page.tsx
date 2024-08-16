@@ -236,7 +236,7 @@ export default function Home() {
 
   const getEventSource = () => {
     setIsAssistantResponding(true);
-    const eventSource = new EventSource('https://chatappdemobackend.azurewebsites.net/chat/stream?session_id=${sessionId}', {
+    const eventSource = new EventSource(`https://chatappdemobackend.azurewebsites.net/chat/stream?session_id=${sessionId}`, {
       withCredentials: true
     });
 
@@ -338,7 +338,6 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try {
-        console.log("Backend:", `${process.env.NEXT_PUBLIC_AXIOS_URL}/chat`) 
         const response = await axios.post('https://chatappdemobackend.azurewebsites.net/chat', {
           message: newMessage,
           suggest_questions: suggestQuestions,
