@@ -137,7 +137,7 @@ export default function Home() {
     formData.append('session_id', sessionId);
 
     try {
-      const response = await axios.post('https://chatappdemobackend.azurewebsites.net/transcribe', formData, {
+      const response = await axios.post(`${process.env.AXIOS_URL}/transcribe`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Session-ID': sessionId
@@ -221,7 +221,7 @@ export default function Home() {
 
   const fetchSuggestedQuestions = async () => {
     try {
-      const response = await axios.get('https://chatappdemobackend.azurewebsites.net/suggest-questions');
+      const response = await axios.get(`${process.env.AXIOS_URL}/suggest-questions`);
       const data = response.data;
       if (data.suggested_questions) {
         setUserSuggestQuestions(data.suggested_questions.filter((q: string) => q.trim() !== ''));
@@ -235,7 +235,7 @@ export default function Home() {
 
   const getEventSource = () => {
     setIsAssistantResponding(true);
-    const eventSource = new EventSource(`https://chatappdemobackend.azurewebsites.net/chat/stream?session_id=${sessionId}`, {
+    const eventSource = new EventSource(`${process.env.AXIOS_URL}/chat/stream?session_id=${sessionId}`, {
       withCredentials: true
     });
 
@@ -337,7 +337,7 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try { 
-        const response = await axios.post('https://chatappdemobackend.azurewebsites.net/chat', {
+        const response = await axios.post(`${process.env.AXIOS_URL}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
           play_audio_response: audioResponse,
@@ -386,7 +386,7 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try { 
-        const response = await axios.post('https://chatappdemobackend.azurewebsites.net/chat', {
+        const response = await axios.post(`${process.env.AXIOS_URL}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
           play_audio_response: audioResponse,
@@ -476,7 +476,7 @@ export default function Home() {
     formData.append('message', newMessage.content);
 
     try {
-      const response = await axios.post('https://chatappdemobackend.azurewebsites.net/upload', formData, {
+      const response = await axios.post(`${process.env.AXIOS_URL}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Session-ID': sessionId
@@ -547,7 +547,7 @@ export default function Home() {
       setMessages(updatedMessages);
   
       try {
-        await axios.post('https://chatappdemobackend.azurewebsites.net/feedback', {
+        await axios.post(`${process.env.AXIOS_URL}/feedback`, {
           sessionId: sessionId,
           likeStatus: 'Good',
           feedback: 'Nije ostavljen komentar',
@@ -588,7 +588,7 @@ export default function Home() {
         setMessages(updatedMessages);
 
         try {
-            await axios.post('https://chatappdemobackend.azurewebsites.net/feedback', {
+            await axios.post(`${process.env.AXIOS_URL}/feedback`, {
                 sessionId: sessionId,
                 status: 'Bad',
                 feedback: feedback,
