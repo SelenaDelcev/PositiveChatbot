@@ -570,6 +570,12 @@ export default function Home() {
     setFeedback(e.target.value);
     setFeedbackError('');
   };
+
+  const handleCancel = () => {
+    setFeedback('');
+    setLikeStatus(null);
+    setFeedbackVisible(false);
+  };
   
   const handleFeedbackSubmit = async () => {
     const updatedMessages = [...messages];
@@ -740,7 +746,8 @@ export default function Home() {
                           }
                         }}
                       />
-                      <Button onClick={handleFeedbackSubmit} 
+                      <Button 
+                        onClick={feedback ? handleFeedbackSubmit : handleCancel} 
                         sx={{
                           '&:hover': {
                             backgroundColor: '#505050'
@@ -748,10 +755,11 @@ export default function Home() {
                           marginTop: 1.2,
                           fontSize: 12
                         }}>
-                        <SendIcon sx={{ fontSize: 14, marginRight: 1 }}/>
-                        Pošalji
+                        {feedback ? (<SendIcon sx={{ fontSize: 14, marginRight: 1 }} />) : (<CancelOutlinedIcon sx={{ fontSize: 14, marginRight: 1 }} />)}
+                        {feedback
+                          ? language === 'en' ? 'Send' : 'Pošalji'
+                          : language === 'en' ? 'Cancel' : 'Odustani'}
                       </Button>
-                      {feedbackError && <span style={{ color: 'red', marginLeft: '10px' }}>{feedbackError}</span>}
                     </div>
                   )}
                 </div>
