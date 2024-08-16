@@ -803,7 +803,7 @@ export default function Home() {
               <div className="input-container">
                 <input
                   type="text"
-                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako vam mogu pomoći?'}
+                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
                   value={userMessage}
                   onChange={(e) => setUserMessage(e.target.value)}
                 />
