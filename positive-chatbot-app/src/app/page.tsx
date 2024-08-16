@@ -336,7 +336,8 @@ export default function Home() {
     if (files.length > 0) {
       await handleFileSubmit(newMessage);
     } else {
-      try { 
+      try {
+        console.log("Backend:", `${process.env.AXIOS_URL}/chat`) 
         const response = await axios.post(`${process.env.AXIOS_URL}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
