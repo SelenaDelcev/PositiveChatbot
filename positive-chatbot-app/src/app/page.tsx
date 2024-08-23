@@ -51,36 +51,16 @@ export default function Home() {
   const [feedback, setFeedback] = useState<string>('');
   const [likeStatus, setLikeStatus] = useState<'Good' | 'Bad' | null>(null);
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR) {
-      document.documentElement.style.setProperty('--primary-bg-color', process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
-    }
-
-    if (process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR) {
-      document.documentElement.style.setProperty('--primary-font-color', process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
-    }
-
-    if (process.env.NEXT_PUBLIC_USER_BG_COLOR) {
-      document.documentElement.style.setProperty('--user-bg-color', process.env.NEXT_PUBLIC_USER_BG_COLOR);
-    }
-
-    if (process.env.NEXT_PUBLIC_ASSISTANT_BG_COLOR) {
-      document.documentElement.style.setProperty('--assistant-bg-color', process.env.NEXT_PUBLIC_ASSISTANT_BG_COLOR);
-    }
-
-    if (process.env.NEXT_PUBLIC_BACKGROUND_IMAGE) {
-      document.documentElement.style.setProperty('--background-image', `url(${process.env.NEXT_PUBLIC_BACKGROUND_IMAGE})`);
-    }
-
-    if (process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR) {
-      document.documentElement.style.setProperty('--primary-inputrow-color', process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
-    }
-
-    if (process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR) {
-      document.documentElement.style.setProperty('--primary-sendbutton-color', process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
-    }
-  }, []);
+  const [backgroundColor,] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
+  const [backgroundImage] = useState(process.env.NEXT_PUBLIC_BACKGROUND_IMAGE);
+  const [avatarImage] = useState(process.env.NEXT_PUBLIC_AVATAR_IMAGE);
+  const [fontColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
+  const [userBackgroundColor] = useState(process.env.NEXT_PUBLIC_USER_BG_COLOR);
+  const [assistantBackgroundColor] = useState(process.env.NEXT_PUBLIC_ASSISTANT_BG_COLOR);
+  const [inputRowColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
+  const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
+  const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
+ 
 
   useEffect(() => {
     const storedSessionId = sessionStorage.getItem('sessionId');
@@ -132,7 +112,7 @@ export default function Home() {
     formData.append('session_id', sessionId);
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/transcribe`, formData, {
+      const response = await axios.post(`${baseUrl}/transcribe`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Session-ID': sessionId
@@ -216,7 +196,7 @@ export default function Home() {
 
   const fetchSuggestedQuestions = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_AXIOS_URL}/suggest-questions`);
+      const response = await axios.get(`${baseUrl}/suggest-questions`);
       const data = response.data;
       if (data.suggested_questions) {
         setUserSuggestQuestions(data.suggested_questions.filter((q: string) => q.trim() !== ''));
@@ -230,7 +210,7 @@ export default function Home() {
 
   const getEventSource = () => {
     setIsAssistantResponding(true);
-    const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_AXIOS_URL}/chat/stream?session_id=${sessionId}`, {
+    const eventSource = new EventSource(`${baseUrl}/chat/stream?session_id=${sessionId}`, {
       withCredentials: true
     });
 
@@ -331,7 +311,7 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/chat`, {
+        const response = await axios.post(`${baseUrl}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
           play_audio_response: audioResponse,
@@ -380,7 +360,7 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try { 
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/chat`, {
+        const response = await axios.post(`${baseUrl}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
           play_audio_response: audioResponse,
@@ -470,7 +450,7 @@ export default function Home() {
     formData.append('message', newMessage.content);
 
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/upload`, formData, {
+      const response = await axios.post(`${baseUrl}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Session-ID': sessionId
@@ -541,7 +521,7 @@ export default function Home() {
       setMessages(updatedMessages);
   
       try {
-        await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/feedback`, {
+        await axios.post(`${baseUrl}/feedback`, {
           sessionId: sessionId,
           likeStatus: 'Good',
           feedback: 'Nije ostavljen komentar',
@@ -582,7 +562,7 @@ export default function Home() {
         setMessages(updatedMessages);
 
         try {
-            await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/feedback`, {
+            await axios.post(`${baseUrl}/feedback`, {
                 sessionId: sessionId,
                 status: 'Bad',
                 feedback: feedback,
@@ -638,8 +618,9 @@ export default function Home() {
   ];
 
    return (
-    <div className="App">
-      <div className="chat-container">
+    <div className="App" style={{ backgroundColor: backgroundColor }}>
+      <div className="chat-container"
+      style={{border: `1px solid ${backgroundColor}`, backgroundColor: backgroundColor, backgroundImage: `url(${backgroundImage})`, boxShadow: `inset 0 0 8px ${backgroundColor}`}}>
         <div className="messages">
           {messages.map((message, index) => (
             <div key={index} className="message-container">
