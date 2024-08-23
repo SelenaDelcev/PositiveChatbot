@@ -53,6 +53,9 @@ export default function Home() {
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log('NEXT_PUBLIC_PRIMARY_BG_COLOR:', process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
+    console.log('NEXT_PUBLIC_PRIMARY_FONT_COLOR:', process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
+    console.log('NEXT_PUBLIC_AXIOS_URL:', process.env.NEXT_PUBLIC_AXIOS_URL);
     if (process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR) {
       document.documentElement.style.setProperty('--primary-bg-color', process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
     }
