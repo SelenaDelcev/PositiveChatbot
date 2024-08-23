@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
 
 :root {
-  --primary-bg-color: #3d3d3d;
+  --primary-bg-color: #505050;
   --primary-font-color: #ffff;
-  --user-bg-color: #f33b4b;
-  --assistant-bg-color: #2a2a2a;
+  --user-bg-color: #2a2a2a;
+  --assistant-bg-color: #f33b4b;
   --background-image: url('/background/positive-background.png');
-  --primary-inputrow-color: #505050;
+  --primary-inputrow-color: #3d3d3d;
   --primary-sendbutton-color: #b3b3b3;
 }
 
