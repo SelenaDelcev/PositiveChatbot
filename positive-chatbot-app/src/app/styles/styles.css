@@ -26,24 +26,22 @@
   overflow: hidden;
 }
 
-/* Hide scrollbar for entire chat container */
 .chat-container::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none; 
 }
 
 .chat-container {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for messages div */
 .messages::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none; 
 }
 
 .messages {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
 }
 
 .messages {
