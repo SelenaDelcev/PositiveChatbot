@@ -51,7 +51,6 @@ export default function Home() {
   const [feedback, setFeedback] = useState<string>('');
   const [likeStatus, setLikeStatus] = useState<'Good' | 'Bad' | null>(null);
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
-  const [feedbackError, setFeedbackError] = useState<string>('');
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR) {
@@ -74,19 +73,14 @@ export default function Home() {
       document.documentElement.style.setProperty('--background-image', `url(${process.env.NEXT_PUBLIC_BACKGROUND_IMAGE})`);
     }
 
-    if (process.env.NEXT_PUBLIC_AVATAR_IMAGE) {
-      document.documentElement.style.setProperty('--avatar-image', `url(${process.env.NEXT_PUBLIC_AVATAR_IMAGE})`);
-    }
-
     if (process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR) {
       document.documentElement.style.setProperty('--primary-inputrow-color', process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
     }
 
     if (process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR) {
-      document.documentElement.style.setProperty('--primary-sendbutton-color', `url(${process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR})`);
+      document.documentElement.style.setProperty('--primary-sendbutton-color', process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
     }
   }, []);
-
 
   useEffect(() => {
     const storedSessionId = sessionStorage.getItem('sessionId');
@@ -116,7 +110,7 @@ export default function Home() {
   }, []);
 
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, []);
 
   useEffect(() => {
@@ -138,7 +132,7 @@ export default function Home() {
     formData.append('session_id', sessionId);
 
     try {
-      const response = await axios.post('https://chatappdemobackend.azurewebsites.net/transcribe', formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/transcribe`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Session-ID': sessionId
@@ -222,7 +216,7 @@ export default function Home() {
 
   const fetchSuggestedQuestions = async () => {
     try {
-      const response = await axios.get('https://chatappdemobackend.azurewebsites.net/suggest-questions');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_AXIOS_URL}/suggest-questions`);
       const data = response.data;
       if (data.suggested_questions) {
         setUserSuggestQuestions(data.suggested_questions.filter((q: string) => q.trim() !== ''));
@@ -236,7 +230,7 @@ export default function Home() {
 
   const getEventSource = () => {
     setIsAssistantResponding(true);
-    const eventSource = new EventSource(`https://chatappdemobackend.azurewebsites.net/chat/stream?session_id=${sessionId}`, {
+    const eventSource = new EventSource(`${process.env.NEXT_PUBLIC_AXIOS_URL}/chat/stream?session_id=${sessionId}`, {
       withCredentials: true
     });
 
@@ -327,7 +321,6 @@ export default function Home() {
     };
     setLikeStatus(null);
     setFeedbackVisible(false);
-    setFeedbackError('');
     setUserMessage(''); 
     setFiles([]);
 
@@ -338,7 +331,7 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try {
-        const response = await axios.post('https://chatappdemobackend.azurewebsites.net/chat', {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
           play_audio_response: audioResponse,
@@ -387,7 +380,7 @@ export default function Home() {
       await handleFileSubmit(newMessage);
     } else {
       try { 
-        const response = await axios.post('https://chatappdemobackend.azurewebsites.net/chat', {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/chat`, {
           message: newMessage,
           suggest_questions: suggestQuestions,
           play_audio_response: audioResponse,
@@ -477,7 +470,7 @@ export default function Home() {
     formData.append('message', newMessage.content);
 
     try {
-      const response = await axios.post('https://chatappdemobackend.azurewebsites.net/upload', formData, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'Session-ID': sessionId
@@ -548,7 +541,7 @@ export default function Home() {
       setMessages(updatedMessages);
   
       try {
-        await axios.post('https://chatappdemobackend.azurewebsites.net/feedback', {
+        await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/feedback`, {
           sessionId: sessionId,
           likeStatus: 'Good',
           feedback: 'Nije ostavljen komentar',
@@ -568,7 +561,6 @@ export default function Home() {
   
   const handleFeedbackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFeedback(e.target.value);
-    setFeedbackError('');
   };
 
   const handleCancel = () => {
@@ -581,11 +573,6 @@ export default function Home() {
     const updatedMessages = [...messages];
     const lastMessageIndex = updatedMessages.length - 1;
 
-    if (!feedback) {
-        setFeedbackError('Potrebno je uneti komentar');
-        return;
-    }
-
     if (lastMessageIndex >= 0) {
         const lastQuestion = updatedMessages[lastMessageIndex - 1]?.content || "";
         const lastAnswer = updatedMessages[lastMessageIndex]?.content || "";
@@ -595,7 +582,7 @@ export default function Home() {
         setMessages(updatedMessages);
 
         try {
-            await axios.post('https://chatappdemobackend.azurewebsites.net/feedback', {
+            await axios.post(`${process.env.NEXT_PUBLIC_AXIOS_URL}/feedback`, {
                 sessionId: sessionId,
                 status: 'Bad',
                 feedback: feedback,
@@ -607,7 +594,6 @@ export default function Home() {
         }
         setFeedbackVisible(false);
         setFeedback('');
-        setFeedbackError('');
     }
 };
 
