@@ -1,44 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap');
 
+:root {
+  --primary-bg-color: #505050;
+  --primary-font-color: #ffff;
+  --user-bg-color: #2a2a2a;
+  --assistant-bg-color: #f33b4b;
+  --background-image: url('/background/positive-background.png');
+  --primary-inputrow-color: #3d3d3d;
+  --primary-sendbutton-color: #b3b3b3;
+}
+
 .App {
   font-family: 'Roboto', Arial, sans-serif;
+  background-color: var(--primary-bg-color);
   max-width: 600px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
-
 .chat-container {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
+  border: 1px solid var(--primary-bg-color);
   border-radius: 5px;
+  background-color: var(--primary-bg-color);
+  background-image: var(--background-image);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  box-shadow: inset 0 0 8px var(--primary-bg-color);
   overflow: hidden;
 }
-
+/* Hide scrollbar for entire chat container */
 .chat-container::-webkit-scrollbar {
-  display: none; 
+  display: none;  /* Chrome, Safari and Opera */
 }
-
 .chat-container {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
-
+/* Hide scrollbar for messages div */
 .messages::-webkit-scrollbar {
-  display: none; 
+  display: none;  /* Chrome, Safari and Opera */
 }
-
 .messages {
-  -ms-overflow-style: none; 
-  scrollbar-width: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
-
 .messages {
   flex: 1; 
   padding: 10px;
@@ -47,7 +58,6 @@
   border-bottom: 1px solid var(--primary-bg-color);
   padding-bottom: 8px;
 }
-
 .message {
   border-radius: 20px;
   padding: 5px 10px;
@@ -56,7 +66,6 @@
   max-width: 400px;
   width: fit-content;
 }
-
 .message-container {
   display: flex;
   align-items: flex-end;
@@ -66,14 +75,12 @@
   font-weight: 300;
   letter-spacing: 1px;
 }
-
 .assistant-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-right: 10px;
 }
-
 .message.user {
   color: var(--primary-font-color);
   margin-left: auto;
@@ -81,7 +88,6 @@
   background-attachment: fixed;
   position: relative;
 }
-
 .message.user:before {
   content: "";
   position: absolute;
@@ -94,7 +100,6 @@
   background-attachment: fixed;
   border-bottom-left-radius: 15px;
 }
-
 .message.user:after {
   content: "";
   position: absolute;
@@ -106,7 +111,6 @@
   background: linear-gradient(-90deg, var(--primary-bg-color), var(--primary-bg-color));
   border-bottom-left-radius: 10px;
 }
-
 .message.assistant {
   color: var(--primary-font-color);
   margin-right: auto;
@@ -114,7 +118,6 @@
   background-attachment: fixed;
   position: relative;
 }
-
 .message.assistant:before {
   content: "";
   position: absolute;
@@ -127,7 +130,6 @@
   background-attachment: fixed;
   border-bottom-right-radius: 15px;
 }
-
 .message.assistant:after {
   content: "";
   position: absolute;
@@ -139,11 +141,9 @@
   background: linear-gradient(-90deg, var(--primary-bg-color), var(--primary-bg-color));
   border-bottom-right-radius: 10px;
 }
-
 .custom-link {
   color: var(--user-bg-color);
 }
-
 .input-row {
   display: flex;
   align-items: center;
@@ -154,25 +154,21 @@
   width: 95%;
   box-sizing: border-box;
 }
-
 .iframe-container {
   width: 100%;
   overflow-x: auto;
 }
-
 .iframe-container iframe {
   width: 100%;
   height: 400px;
   border: none;
   display: block;
 }
-
 .message-input {
   flex: 1;
   display: flex;
   align-items: center;
 }
-
 .message-input .input-container {
   display: flex;
   flex: 1;
@@ -182,7 +178,6 @@
   background-color: var(--primary-inputrow-color);
   margin-right: 10px;
 }
-
 .message-input input[type="text"] {
   flex: 1;
   padding: 10px;
@@ -191,7 +186,6 @@
   color: var(--primary-font-color);
   font-family: 'Roboto', Arial, sans-serif;
 }
-
 .message-input .send-button {
   width: 45px;
   height: 45px;
@@ -206,56 +200,45 @@
   align-items: center;
   justify-content: center;
 }
-
 .message-input .send-button.recording {
   background-color: var(--primary-inputrow-color);
   color: var(--user-bg-color);
 }
-
 .message-input .send-button:hover {
   background-color: var(--primary-inputrow-color);
   color: var(--primary-font-color);
 }
-
 .message-input .send-button.recording:hover {
   background-color: var(--user-bg-color);
   color: var(--primary-font-color);
 }
-
 input[type="text"]::placeholder {
   color: var(--primary-font-color); 
 }
-
 input[type="text"]:focus {
   outline: none;
 }
-
 button:enabled {
   cursor: pointer; 
   background-color: var(--primary-inputrow-color);
   color: var(--primary-font-color);
 }
-
 button:enabled:hover {
   color: var(--primary-font-color);
 }
-
 button:disabled {
   background-color: var(--primary-inputrow-color);
   color: var(--primary-sendbutton-color); 
 }
-
 button:disabled:hover {
   background-color: var(--primary-inputrow-color);
   color: var(--primary-sendbutton-color);
 }
-
 .speed-dial {
   width: 45px;
   height: 45px;
   margin-left: 8px;
 }
-
 .speed-dial .MuiSpeedDial-fab {
   width: 45px;
   height: 45px;
@@ -269,27 +252,22 @@ button:disabled:hover {
   justify-content: center;
   overflow: hidden; 
 }
-
 .speed-dial .MuiSpeedDial-fab:hover {
   background-color: var(--primary-inputrow-color);
   color: var(--primary-font-color);
 }
-
 .speed-dial .MuiSpeedDialAction-fab:hover {
   background-color: var(--assistant-bg-color);
   color: var(--primary-font-color);
 }
-
 .attached-files {
   padding: 2px;
 }
-
 .attached-files img {
   width: 15px;
   height: 15px;
   margin-right: 2px;
 }
-
 .typing-indicator {
   color: var(--primary-font-color);
   margin-right: auto;
@@ -304,7 +282,6 @@ button:disabled:hover {
   display: flex;
   align-items: center;
 }
-
 .typing-indicator .dot-1, 
 .typing-indicator .dot-2, 
 .typing-indicator .dot-3 {
@@ -313,15 +290,12 @@ button:disabled:hover {
   margin: 0 2px;
   animation: blink 2s infinite both; 
 }
-
 .typing-indicator .dot-2 {
   animation-delay: 0.4s;
 }
-
 .typing-indicator .dot-3 {
   animation-delay: 0.8s;
 }
-
 @keyframes blink {
   0% {
     opacity: 0.2;
@@ -336,58 +310,47 @@ button:disabled:hover {
     transform: translateY(0); 
   }
 }
-
 /* Responsive styles */
 @media (max-width: 600px) {
   .App {
     max-width: 100%;
     padding: 10px;
   }
-
   .chat-container {
     border: none;
     border-radius: 0;
     padding: 10px 0;
   }
-
   .speed-dial-wrapper {
     padding-bottom: 40px; 
   }
-
   .speed-dial {
     width: 35px;
     height: 35px; 
     margin-left: 5px;
   }
-
   .speed-dial .MuiSpeedDial-fab {
     width: 35px;
     height: 35px;
   }
-
   .speed-dial .MuiSpeedDialIcon-root {
     font-size: 20px;
   }
-
   .input-row {
     padding: 5px; 
   }
-
   .message-input .send-button {
     width: 35px;
     height: 35px;
   }
-
   .message-input .input-container {
     margin-right: 5px; 
   }
-
   .message-input input[type="text"] {
     font-size: 0.875rem; 
     padding: 8px;
   }
 }
-
 @media (min-width: 1600px) {
   .App {
     background-color: var(--primary-bg-color);

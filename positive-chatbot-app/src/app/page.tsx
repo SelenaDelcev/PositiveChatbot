@@ -60,12 +60,37 @@ export default function Home() {
   const [inputRowColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
+
+  useEffect(() => {
+    console.log('backgroundColor:', backgroundColor);
+    console.log('fontColor:', fontColor);
+    console.log('backgroundImage:', backgroundImage);
+    
+    if (backgroundColor) {
+      document.documentElement.style.setProperty('--primary-bg-color', backgroundColor);
+    }
+    if (fontColor) {
+      document.documentElement.style.setProperty('--primary-font-color', fontColor);
+    }
+    if (userBackgroundColor) {
+      document.documentElement.style.setProperty('--user-bg-color', userBackgroundColor);
+    }
+    if (assistantBackgroundColor) {
+      document.documentElement.style.setProperty('--assistant-bg-color', assistantBackgroundColor);
+    }
+    if (backgroundImage) {
+      document.documentElement.style.setProperty('--background-image', `url(${backgroundImage})`);
+    }
+    if (inputRowColor) {
+      document.documentElement.style.setProperty('--primary-inputrow-color', inputRowColor);
+    }
+    if (sendButtonColor) {
+      document.documentElement.style.setProperty('--primary-sendbutton-color', sendButtonColor);
+    }
+  }, [backgroundColor, fontColor, userBackgroundColor, assistantBackgroundColor, backgroundImage, inputRowColor, sendButtonColor]);
  
 
   useEffect(() => {
-    console.log("BackgroundColor:", backgroundColor)
-    console.log("Background image URL:", backgroundImage)
-    console.log("baseURL:", baseUrl);
     const storedSessionId = sessionStorage.getItem('sessionId');
     if (storedSessionId) {
       setSessionId(storedSessionId);
@@ -621,9 +646,8 @@ export default function Home() {
   ];
 
    return (
-    <div className="App" style={{ backgroundColor: backgroundColor }}>
-      <div className="chat-container"
-      style={{border: `1px solid ${backgroundColor}`, backgroundColor: backgroundColor, backgroundImage: `url(${backgroundImage})`, boxShadow: `inset 0 0 8px ${backgroundColor}`}}>
+    <div className="App">
+      <div className="chat-container">
         <div className="messages">
           {messages.map((message, index) => (
             <div key={index} className="message-container">
@@ -631,7 +655,7 @@ export default function Home() {
                 <div className="assistant-avatar">
                   <Avatar
                     alt="3Pi"
-                    src={process.env.NEXT_PUBLIC_AVATAR_IMAGE || '/avatar/positive-avatar.jpg'}
+                    src={avatarImage || '/avatar/positive-avatar.jpg'}
                     sx={{ width: 25, height: 25 }}
                   />
                 </div>
