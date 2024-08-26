@@ -33,16 +33,6 @@ jobs:
           app_location: "./positive-chatbot-app" 
           api_location: "" 
           output_location: ""
-        env: 
-          NEXT_PUBLIC_AXIOS_URL: ${{ secrets.NEXT_PUBLIC_AXIOS_URL }}
-          NEXT_PUBLIC_PRIMARY_BG_COLOR: ${{ secrets.NEXT_PUBLIC_PRIMARY_BG_COLOR }}
-          NEXT_PUBLIC_PRIMARY_FONT_COLOR: ${{ secrets.NEXT_PUBLIC_PRIMARY_FONT_COLOR }}
-          NEXT_PUBLIC_USER_BG_COLOR: ${{ secrets.NEXT_PUBLIC_USER_BG_COLOR }}
-          NEXT_PUBLIC_ASSISTANT_BG_COLOR: ${{ secrets.NEXT_PUBLIC_ASSISTANT_BG_COLOR }}
-          NEXT_PUBLIC_BACKGROUND_IMAGE: ${{ secrets.NEXT_PUBLIC_BACKGROUND_IMAGE }}
-          NEXT_PUBLIC_AVATAR_IMAGE: ${{ secrets.NEXT_PUBLIC_AVATAR_IMAGE }}
-          NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR: ${{ secrets.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR }}
-          NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR: ${{ secrets.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
