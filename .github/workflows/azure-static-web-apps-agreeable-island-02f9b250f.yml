@@ -21,7 +21,7 @@ jobs:
           lfs: false
 
       - name: Copy Env File
-        run: cp env/positive.env.production .env.production
+        run: cp positive-chatbot-app/env/positive.env.production .env.production
 
       - name: Build And Deploy
         id: builddeploy
