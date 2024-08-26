@@ -20,6 +20,9 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Copy Env File
+        run: cp env/positive.env.production .env.production
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
