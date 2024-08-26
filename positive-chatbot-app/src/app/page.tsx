@@ -62,7 +62,7 @@ export default function Home() {
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
 
   useEffect(() => {
-    console.log('backgroundColor:', backgroundColor);
+    console.log('userBackgroundColor:', userBackgroundColor);
     console.log('fontColor:', fontColor);
     console.log('backgroundImage:', backgroundImage);
     console.log('url:', baseUrl);
