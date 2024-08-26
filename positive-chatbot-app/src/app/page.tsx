@@ -65,6 +65,7 @@ export default function Home() {
     console.log('backgroundColor:', backgroundColor);
     console.log('fontColor:', fontColor);
     console.log('backgroundImage:', backgroundImage);
+    console.log('url:', baseUrl);
     
     if (backgroundColor) {
       document.documentElement.style.setProperty('--primary-bg-color', backgroundColor);
