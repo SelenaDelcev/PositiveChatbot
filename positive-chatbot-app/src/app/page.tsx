@@ -72,7 +72,13 @@ export default function Home() {
     return `${r}, ${g}, ${b}`;
   }
 
+  console.log('Initial backgroundStartRgb:', backgroundStartRgb);
+  console.log('Initial backgroundEndRgb:', backgroundEndRgb);
+
   useEffect(() => {
+    console.log('backgroundColor:', backgroundColor);
+    console.log('backgroundStartRgb:', backgroundStartRgb);
+    console.log('backgroundEndRgb:', backgroundEndRgb);
     if (backgroundColor) {
       document.documentElement.style.setProperty('--primary-bg-color', backgroundColor);
     }
