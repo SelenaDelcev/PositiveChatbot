@@ -53,13 +53,15 @@ export default function Home() {
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
   const [backgroundColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
   const [backgroundImage] = useState(process.env.NEXT_PUBLIC_BACKGROUND_IMAGE);
-  const [avatarImage] = useState(process.env.NEXT_PUBLIC_AVATAR_IMAGE);
+  const [avatarImage, setAvatarImage] = useState('');
   const [fontColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
   const [userBackgroundColor] = useState(process.env.NEXT_PUBLIC_USER_BG_COLOR);
   const [assistantBackgroundColor] = useState(process.env.NEXT_PUBLIC_ASSISTANT_BG_COLOR);
   const [inputRowColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
+  const [backgroundStartRgb, setBackgroundStartRgb] = useState('');
+  const [backgroundEndRgb, setBackgroundEndRgb] = useState('');
 
   useEffect(() => {
     console.log('userBackgroundColor:', userBackgroundColor);
@@ -69,6 +71,8 @@ export default function Home() {
     
     if (backgroundColor) {
       document.documentElement.style.setProperty('--primary-bg-color', backgroundColor);
+      setBackgroundStartRgb(backgroundColor);
+      setBackgroundEndRgb(backgroundColor);
     }
     if (fontColor) {
       document.documentElement.style.setProperty('--primary-font-color', fontColor);
@@ -82,13 +86,22 @@ export default function Home() {
     if (backgroundImage) {
       document.documentElement.style.setProperty('--background-image', `url(${backgroundImage})`);
     }
+    const avatar = process.env.NEXT_PUBLIC_AVATAR_IMAGE || '/avatar/positive-avatar.jpg';
+    setAvatarImage(avatar);
     if (inputRowColor) {
       document.documentElement.style.setProperty('--primary-inputrow-color', inputRowColor);
     }
     if (sendButtonColor) {
       document.documentElement.style.setProperty('--primary-sendbutton-color', sendButtonColor);
     }
-  }, [backgroundColor, fontColor, userBackgroundColor, assistantBackgroundColor, backgroundImage, inputRowColor, sendButtonColor]);
+    if (backgroundStartRgb) {
+      document.documentElement.style.setProperty('--background-start-default', backgroundStartRgb);
+    }
+    if (backgroundEndRgb) {
+      document.documentElement.style.setProperty('--background-end-default', backgroundEndRgb);
+    }
+
+  }, [backgroundColor, fontColor, userBackgroundColor, assistantBackgroundColor, backgroundImage, inputRowColor, sendButtonColor, backgroundStartRgb, backgroundEndRgb]);
  
 
   useEffect(() => {
@@ -656,7 +669,7 @@ export default function Home() {
                 <div className="assistant-avatar">
                   <Avatar
                     alt="3Pi"
-                    src={avatarImage || '/avatar/positive-avatar.jpg'}
+                    src={avatarImage}
                     sx={{ width: 25, height: 25 }}
                   />
                 </div>
