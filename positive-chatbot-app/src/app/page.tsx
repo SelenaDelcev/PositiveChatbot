@@ -61,8 +61,16 @@ export default function Home() {
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
   const [customLinkColor] = useState(process.env.NEXT_PUBLIC_CUSTOM_LINK_COLOR);
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
-  const [backgroundStartRgb] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
-  const [backgroundEndRgb] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
+  const [backgroundStartRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
+  const [backgroundEndRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
+
+  function hexToRgb(hex: any) {
+    const bigint = parseInt(hex.slice(1), 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `${r}, ${g}, ${b}`;
+  }
 
   useEffect(() => {
     if (backgroundColor) {
@@ -112,6 +120,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
+      console.log(event)
       if (event.data.type === 'main-url') {
         const path = event.data.url;
         const isEnglish = path.includes('/en/') || path.endsWith('/en');
