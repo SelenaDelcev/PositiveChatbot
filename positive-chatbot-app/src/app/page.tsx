@@ -53,7 +53,7 @@ export default function Home() {
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
   const [backgroundColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
   const [backgroundImage] = useState(process.env.NEXT_PUBLIC_BACKGROUND_IMAGE);
-  const [avatarImage, setAvatarImage] = useState('');
+  const [avatarImage] = useState(process.env.NEXT_PUBLIC_AVATAR_IMAGE);
   const [fontColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
   const [userBackgroundColor] = useState(process.env.NEXT_PUBLIC_USER_BG_COLOR);
   const [assistantBackgroundColor] = useState(process.env.NEXT_PUBLIC_ASSISTANT_BG_COLOR);
@@ -86,8 +86,6 @@ export default function Home() {
     if (backgroundImage) {
       document.documentElement.style.setProperty('--background-image', `url(${backgroundImage})`);
     }
-    const avatar = process.env.NEXT_PUBLIC_AVATAR_IMAGE || '/avatar/positive-avatar.jpg';
-    setAvatarImage(avatar);
     if (inputRowColor) {
       document.documentElement.style.setProperty('--primary-inputrow-color', inputRowColor);
     }
@@ -780,7 +778,7 @@ export default function Home() {
             <div className="assistant-avatar">
               <Avatar
                 alt="3Pi"
-                src={process.env.AVATAR_IMAGE || '/avatar/positive-avatar.jpg'}
+                src={avatarImage}
                 sx={{ width: 25, height: 25 }}
               />
             </div>
