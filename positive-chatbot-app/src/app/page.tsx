@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import './styles/styles.css';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
@@ -72,8 +72,10 @@ export default function Home() {
     return `${r}, ${g}, ${b}`;
   }
 
-  console.log('Initial backgroundStartRgb:', backgroundStartRgb);
-  console.log('Initial backgroundEndRgb:', backgroundEndRgb);
+  useLayoutEffect(() => {
+    document.documentElement.style.setProperty('--background-start-default', backgroundStartRgb, 'important');
+    document.documentElement.style.setProperty('--background-end-default', backgroundEndRgb, 'important');
+  }, [backgroundStartRgb, backgroundEndRgb]);
 
   useEffect(() => {
     console.log('backgroundColor:', backgroundColor);
@@ -103,14 +105,8 @@ export default function Home() {
     if (customLinkColor) {
       document.documentElement.style.setProperty('--custom-link-color', customLinkColor);
     }
-    if (backgroundStartRgb) {
-      document.documentElement.style.setProperty('--background-start-default', backgroundStartRgb);
-    }
-    if (backgroundEndRgb) {
-      document.documentElement.style.setProperty('--background-end-default', backgroundEndRgb);
-    }
 
-  }, [backgroundColor, fontColor, userBackgroundColor, assistantBackgroundColor, backgroundImage, inputRowColor, sendButtonColor, backgroundStartRgb, backgroundEndRgb]);
+  }, [backgroundColor, fontColor, userBackgroundColor, assistantBackgroundColor, backgroundImage, inputRowColor, sendButtonColor ]);
  
 
   useEffect(() => {
