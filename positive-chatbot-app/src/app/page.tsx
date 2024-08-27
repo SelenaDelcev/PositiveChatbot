@@ -59,20 +59,14 @@ export default function Home() {
   const [assistantBackgroundColor] = useState(process.env.NEXT_PUBLIC_ASSISTANT_BG_COLOR);
   const [inputRowColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
+  const [customLinkColor] = useState(process.env.NEXT_PUBLIC_CUSTOM_LINK_COLOR);
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
-  const [backgroundStartRgb, setBackgroundStartRgb] = useState('');
-  const [backgroundEndRgb, setBackgroundEndRgb] = useState('');
+  const [backgroundStartRgb] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
+  const [backgroundEndRgb] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
 
   useEffect(() => {
-    console.log('userBackgroundColor:', userBackgroundColor);
-    console.log('fontColor:', fontColor);
-    console.log('backgroundImage:', backgroundImage);
-    console.log('url:', baseUrl);
-    
     if (backgroundColor) {
       document.documentElement.style.setProperty('--primary-bg-color', backgroundColor);
-      setBackgroundStartRgb(backgroundColor);
-      setBackgroundEndRgb(backgroundColor);
     }
     if (fontColor) {
       document.documentElement.style.setProperty('--primary-font-color', fontColor);
@@ -91,6 +85,9 @@ export default function Home() {
     }
     if (sendButtonColor) {
       document.documentElement.style.setProperty('--primary-sendbutton-color', sendButtonColor);
+    }
+    if (customLinkColor) {
+      document.documentElement.style.setProperty('--custom-link-color', customLinkColor);
     }
     if (backgroundStartRgb) {
       document.documentElement.style.setProperty('--background-start-default', backgroundStartRgb);

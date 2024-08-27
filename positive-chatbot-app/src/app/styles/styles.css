@@ -8,6 +8,7 @@
   --background-image: url('/background/positive-background.png');
   --primary-inputrow-color: #3d3d3d;
   --primary-sendbutton-color: #b3b3b3;
+  --custom-link-color: #2a2a2a;
 }
 
 .App {
@@ -140,7 +141,7 @@
   border-bottom-right-radius: 10px;
 }
 .custom-link {
-  color: var(--user-bg-color);
+  color: var(--custom-link-color);
 }
 .input-row {
   display: flex;
