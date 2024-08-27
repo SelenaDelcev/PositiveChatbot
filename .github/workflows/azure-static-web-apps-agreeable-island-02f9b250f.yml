@@ -40,6 +40,7 @@ jobs:
           NEXT_PUBLIC_AVATAR_IMAGE: ${{ secrets.POSITIVE_AVATAR_IMAGE }}
           NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR: ${{ secrets.POSITIVE_PRIMARY_INPUTROW_COLOR }}
           NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR: ${{ secrets.POSITIVE_PRIMARY_SENDBUTTON_COLOR }}
+          NEXT_PUBLIC_CUSTOM_LINK_COLOR: ${{ secrets.POSITIVE_CUSTOM_LINK_COLOR }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
