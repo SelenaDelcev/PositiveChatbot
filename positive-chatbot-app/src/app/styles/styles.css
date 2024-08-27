@@ -296,6 +296,20 @@ button:disabled:hover {
 .typing-indicator .dot-3 {
   animation-delay: 0.8s;
 }
+.icon-like {
+  background-color: var(--assistant-bg-color);
+  width: 5;
+  height: 5;
+  margin-left: 10;
+  margin-top: 5;
+  margin-bottom: 10;
+}
+.icon-dislike {
+  background-color: var(--assistant-bg-color);
+  margin-left: 6;
+  margin-top: 5;
+  margin-bottom: 10;
+}
 @keyframes blink {
   0% {
     opacity: 0.2;

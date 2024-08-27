@@ -710,13 +710,13 @@ export default function Home() {
                 )}
               {message.role === 'assistant' && index === messages.length - 1 && (
                 <div className="feedback-buttons">
-                  <IconButton style={{ backgroundColor: '#2a2a2a', width: 5, height: 5, marginLeft: 10, marginTop: 5, marginBottom: 10}} 
+                  <IconButton className="icon-like"
                     disabled={message.likeStatus === 'Bad'}
                     onClick={handleLikeClick}
                   >
                     <ThumbUpIcon sx={{ fontSize: 21, color: likeStatus === 'Good' ? 'green' : 'inherit' }} />
                   </IconButton>
-                  <IconButton style={{ backgroundColor: '#2a2a2a', marginLeft: 6, marginTop: 5, marginBottom: 10}}
+                  <IconButton className="icon-dislike"
                     disabled={message.likeStatus === 'Good'}
                     onClick={handleDislikeClick}
                   >
