@@ -64,7 +64,7 @@ export default function Home() {
   const [backgroundStartRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
   const [backgroundEndRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [userScrolled, setUserScrolled] = useState(false);
+  const [userScrolled, setUserScrolled] = useState<boolean>(false);
 
   function hexToRgb(hex: any) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -80,9 +80,6 @@ export default function Home() {
   }, [backgroundStartRgb, backgroundEndRgb]);
 
   useEffect(() => {
-    console.log('backgroundColor:', backgroundColor);
-    console.log('backgroundStartRgb:', backgroundStartRgb);
-    console.log('backgroundEndRgb:', backgroundEndRgb);
     if (backgroundColor) {
       document.documentElement.style.setProperty('--primary-bg-color', backgroundColor);
     }
@@ -141,32 +138,29 @@ export default function Home() {
 
   const handleScroll = () => {
     if (containerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
-      if (scrollHeight - scrollTop > clientHeight + 50) {
-        setUserScrolled(true);
-      } else {
-        setUserScrolled(false);
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+        if (scrollHeight - scrollTop > clientHeight + 50) {
+            setUserScrolled(true);
+        }
       }
-    }
   };
 
   const scrollToBottom = useCallback(() => {
-    if (!userScrolled && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+      if (!userScrolled && messagesEndRef.current) {
+          messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
   }, [userScrolled]);
 
   useEffect(() => {
-    setUserScrolled(false);
-    scrollToBottom();
+      scrollToBottom();
   }, [messages, scrollToBottom]);
 
   useEffect(() => {
-    const currentContainer = containerRef.current;
-    currentContainer?.addEventListener('scroll', handleScroll);
-    return () => {
-      currentContainer?.removeEventListener('scroll', handleScroll);
-    };
+      const currentContainer = containerRef.current;
+      currentContainer?.addEventListener('scroll', handleScroll);
+      return () => {
+          currentContainer?.removeEventListener('scroll', handleScroll);
+      };
   }, []);
 
   const handleToggle = () => {
