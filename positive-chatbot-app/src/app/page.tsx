@@ -63,6 +63,8 @@ export default function Home() {
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
   const [backgroundStartRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
   const [backgroundEndRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [userScrolled, setUserScrolled] = useState(false);
 
   function hexToRgb(hex: any) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -137,13 +139,35 @@ export default function Home() {
     };
   }, []);
 
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      if (scrollHeight - scrollTop > clientHeight + 50) {
+        setUserScrolled(true);
+      } else {
+        setUserScrolled(false);
+      }
+    }
+  };
+
   const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, []);
+    if (!userScrolled && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [userScrolled]);
 
   useEffect(() => {
+    setUserScrolled(false);
     scrollToBottom();
   }, [messages, scrollToBottom]);
+
+  useEffect(() => {
+    const currentContainer = containerRef.current;
+    currentContainer?.addEventListener('scroll', handleScroll);
+    return () => {
+      currentContainer?.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleToggle = () => {
     setOpenSpeedDial(!openSpeedDial);
@@ -668,7 +692,7 @@ export default function Home() {
    return (
     <div className="App">
       <div className="chat-container">
-        <div className="messages">
+        <div className="messages" ref={containerRef}>
           {messages.map((message, index) => (
             <div key={index} className="message-container">
               {message.role === 'assistant' && (
