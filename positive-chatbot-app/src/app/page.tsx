@@ -65,6 +65,9 @@ export default function Home() {
   const [backgroundEndRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [userScrolled, setUserScrolled] = useState<boolean>(false);
+  const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(process.env.NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS === 'true');
+  const [initialFirstQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_1 || '');
+  const [initialSecondQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_2 || '');
 
   function hexToRgb(hex: any) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -73,7 +76,7 @@ export default function Home() {
     const b = bigint & 255;
     return `${r}, ${g}, ${b}`;
   }
-
+   
   useLayoutEffect(() => {
     document.documentElement.style.setProperty('--background-start-default', backgroundStartRgb, 'important');
     document.documentElement.style.setProperty('--background-end-default', backgroundEndRgb, 'important');
@@ -359,6 +362,8 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+
+    setInitialQuestionsVisible(false);
 
     const newMessage: { role: string; content: string; files: File[] } = {
       role: 'user',
@@ -830,6 +835,42 @@ export default function Home() {
           <div ref={messagesEndRef} />
         </div>
         <div className="input-row-container">
+          {messages.length === 0 && initialQuestionsVisible && (
+              <div className="initial-questions" style={{  marginBottom: '10px', marginLeft: '10px' }}>
+                {initialFirstQuestion && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      handleSuggestedQuestionClick(initialFirstQuestion);
+                      setInitialQuestionsVisible(false);
+                    }}
+                    style={{ 
+                    borderColor: 'white', 
+                    marginBottom: '10px',
+                    animation: 'fadeIn 0.2s ease-in-out 0.2s', 
+                    animationFillMode: 'both' }}
+                  >
+                    {initialFirstQuestion}
+                  </Button>
+                )}
+                {initialSecondQuestion && (
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      handleSuggestedQuestionClick(initialSecondQuestion);
+                      setInitialQuestionsVisible(false);
+                    }}
+                    style={{ 
+                    borderColor: 'white', 
+                    marginBottom: '5px',
+                    animation: 'fadeIn 0.3s ease-in-out 0.3s',
+                    animationFillMode: 'both' }}
+                  >
+                    {initialSecondQuestion}
+                  </Button>
+                )}
+              </div>
+          )}
           <div className="input-row">
             <form onSubmit={handleSubmit} className="message-input">
               <div className="input-container">
