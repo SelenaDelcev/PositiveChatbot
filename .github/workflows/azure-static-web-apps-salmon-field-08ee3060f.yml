@@ -24,14 +24,25 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_SALMON_FIELD_08EE3060F }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/positive-chatbot-app" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_location: "/positive-chatbot-app"
+          api_location: "" 
+          output_location: ""
+        env:
+          NEXT_PUBLIC_AXIOS_URL: ${{ secrets.DELFI_AXIOS_URL }}
+          NEXT_PUBLIC_PRIMARY_BG_COLOR: ${{ secrets.DELFI_PRIMARY_BG_COLOR }}
+          NEXT_PUBLIC_PRIMARY_FONT_COLOR: ${{ secrets.DELFI_PRIMARY_FONT_COLOR }}
+          NEXT_PUBLIC_USER_BG_COLOR: ${{ secrets.DELFI_USER_BG_COLOR }}
+          NEXT_PUBLIC_ASSISTANT_BG_COLOR: ${{ secrets.DELFI_ASSISTANT_BG_COLOR }}
+          NEXT_PUBLIC_BACKGROUND_IMAGE: ${{ secrets.DELFI_BACKGROUND_IMAGE }}
+          NEXT_PUBLIC_AVATAR_IMAGE: ${{ secrets.DELFI_AVATAR_IMAGE }}
+          NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR: ${{ secrets.DELFI_PRIMARY_INPUTROW_COLOR }}
+          NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR: ${{ secrets.DELFI_PRIMARY_SENDBUTTON_COLOR }}
+          NEXT_PUBLIC_CUSTOM_LINK_COLOR: ${{ secrets.DELFI_CUSTOM_LINK_COLOR }}
+          NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS: ${{ secrets.DELFI_SHOW_INITIAL_QUESTIONS }}
+          NEXT_PUBLIC_INITIAL_QUESTION_1: ${{ secrets.DELFI_INITIAL_QUESTION_1 }}
+          NEXT_PUBLIC_INITIAL_QUESTION_2: ${{ secrets.DELFI_INITIAL_QUESTION_2 }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
