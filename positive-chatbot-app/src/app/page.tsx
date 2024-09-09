@@ -51,7 +51,7 @@ export default function Home() {
   const [feedback, setFeedback] = useState<string>('');
   const [likeStatus, setLikeStatus] = useState<'Good' | 'Bad' | null>(null);
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
-  const [backgroundColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
+  const [backgroundColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR || '#000000');
   const [backgroundImage] = useState(process.env.NEXT_PUBLIC_BACKGROUND_IMAGE);
   const [avatarImage] = useState(process.env.NEXT_PUBLIC_AVATAR_IMAGE);
   const [fontColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
