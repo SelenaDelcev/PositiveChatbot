@@ -61,8 +61,8 @@ export default function Home() {
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
   const [customLinkColor] = useState(process.env.NEXT_PUBLIC_CUSTOM_LINK_COLOR);
   const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
-  const [backgroundStartRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
-  const [backgroundEndRgb] = useState(hexToRgb(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR));
+  const [backgroundStartRgb] = useState(hexToRgb(backgroundColor));
+  const [backgroundEndRgb] = useState(hexToRgb(backgroundColor));
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [userScrolled, setUserScrolled] = useState<boolean>(false);
   const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(process.env.NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS === 'true');
