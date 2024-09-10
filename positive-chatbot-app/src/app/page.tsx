@@ -65,6 +65,11 @@ export default function Home() {
   const [backgroundEndRgb] = useState(hexToRgb(backgroundColor));
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [userScrolled, setUserScrolled] = useState<boolean>(false);
+  const [deleteIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_DELETE_ICON === 'true');
+  const [attachFileIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_ATTACH_FILE_ICON === 'true');
+  const [saveIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_SAVE_ICON === 'true');
+  const [suggestQuestionsIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_SUGGEST_QUESTIONS_ICON === 'true');
+  const [audioResponseIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_AUDIO_RESPONSE_ICON === 'true');
   const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(process.env.NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS === 'true');
   const [initialFirstQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_1 || '');
   const [initialSecondQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_2 || '');
@@ -650,8 +655,8 @@ export default function Home() {
 };
 
   const actions = [
-    { icon: <DeleteIcon />, name: (language === 'en' ? 'Delete' : 'Obriši'), onClick: handleClearChat },
-    {
+    deleteIconVisible && { icon: <DeleteIcon />, name: (language === 'en' ? 'Delete' : 'Obriši'), onClick: handleClearChat },
+    attachFileIconVisible && {
       icon: (
         <div style={{ position: 'relative' }}>
           <AttachFileSharpIcon style={{ color: files.length > 0 ? 'red' : 'inherit' }} />
@@ -684,9 +689,9 @@ export default function Home() {
         }
       }
     },
-    { icon: <SaveAltSharpIcon />, name: (language === 'en' ? 'Save' : 'Sačuvaj'), onClick: handleSaveChat },
-    { icon: <TipsAndUpdatesIcon style={{ color: suggestQuestions ? 'red' : 'inherit' }} />, name: suggestQuestions ? (language === 'en' ? 'Turn off question suggestions' : 'Isključi predloge pitanja') : (language === 'en' ? 'Turn on question suggestions' : 'Predlozi pitanja'), onClick: handleSuggestQuestions },
-    { icon: <VolumeUpIcon style={{ color: audioResponse ? 'red' : 'inherit' }} />, name: audioResponse ? (language === 'en' ? 'Turn off assistant audio response' : 'Isključi audio odgovor asistenta') : (language === 'en' ? 'Turn on assistant audio response' : 'Slušaj odgovor asistenta'), onClick: handleAudioResponseClick },
+    saveIconVisible && { icon: <SaveAltSharpIcon />, name: (language === 'en' ? 'Save' : 'Sačuvaj'), onClick: handleSaveChat },
+    suggestQuestionsIconVisible && { icon: <TipsAndUpdatesIcon style={{ color: suggestQuestions ? 'red' : 'inherit' }} />, name: suggestQuestions ? (language === 'en' ? 'Turn off question suggestions' : 'Isključi predloge pitanja') : (language === 'en' ? 'Turn on question suggestions' : 'Predlozi pitanja'), onClick: handleSuggestQuestions },
+    audioResponseIconVisible && { icon: <VolumeUpIcon style={{ color: audioResponse ? 'red' : 'inherit' }} />, name: audioResponse ? (language === 'en' ? 'Turn off assistant audio response' : 'Isključi audio odgovor asistenta') : (language === 'en' ? 'Turn on assistant audio response' : 'Slušaj odgovor asistenta'), onClick: handleAudioResponseClick },
   ];
 
    return (
@@ -906,13 +911,15 @@ export default function Home() {
               onClick={handleToggle}
               open={openSpeedDial} 
             >
-              {actions.map((action) => (
-                <SpeedDialAction
-                  key={typeof action.name === 'string' ? action.name : action.name.toString()}
-                  icon={action.icon}
-                  tooltipTitle={action.name}
-                  onClick={handleActionClick(action.onClick)}
-                />
+              {actions
+                .filter(action => action !== false)
+                .map((action) => (
+                  <SpeedDialAction
+                    key={typeof action.name === 'string' ? action.name : action.name.toString()}
+                    icon={action.icon}
+                    tooltipTitle={action.name}
+                    onClick={handleActionClick(action.onClick)}
+                  />
               ))}
             </SpeedDial>
             <input
