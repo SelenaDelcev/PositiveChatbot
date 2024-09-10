@@ -425,6 +425,7 @@ export default function Home() {
     };
   
     setMessages(prevMessages => [...prevMessages, newMessage]);
+    setShowTypingIndicator(true);
     setUserSuggestQuestions([]);
   
     if (files.length > 0) {
