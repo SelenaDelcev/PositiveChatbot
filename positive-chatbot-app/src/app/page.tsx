@@ -176,7 +176,6 @@ export default function Home() {
   const handleToggle = () => {
     setOpenSpeedDial(!openSpeedDial);
     setInitialQuestionsVisible(openSpeedDial);
-    setSuggestQuestions(openSpeedDial);
   };
 
   const handleActionClick = (actionOnClick: () => void) => (event: React.MouseEvent) => {
