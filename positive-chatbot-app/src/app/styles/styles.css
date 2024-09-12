@@ -150,11 +150,18 @@
   margin-top: 10px;
   padding: 5px 10px;
   width: 95%;
+  opacity: 0.7;
+  transition: opacity 0.3s ease-in-out;
+  font-size: 12px;
 }
 
 .suggested-question-button:hover,
 .initial-question-button:hover {
   background-color: var(--user-bg-color);
+}
+.suggested-question-button:hover,
+.initial-question-button:hover {
+  opacity: 1;
 }
 .input-row-container {
   margin-bottom: 5px;
