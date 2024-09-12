@@ -73,6 +73,8 @@ export default function Home() {
   const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(process.env.NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS === 'true');
   const [initialFirstQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_1 || '');
   const [initialSecondQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_2 || '');
+  const [feedbackIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_FEEDBACK === 'true');
+  const [voiceRecordIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON === 'true');
 
   function hexToRgb(hex: any) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -743,7 +745,7 @@ export default function Home() {
                     </div>
                   </Tooltip>
                 )}
-              {message.role === 'assistant' && index === messages.length - 1 && (
+              {feedbackIconVisible && message.role === 'assistant' && index === messages.length - 1 && (
                 <div className="feedback-buttons">
                   <IconButton className="icon-like"
                     disabled={message.likeStatus === 'Bad'}
@@ -824,6 +826,65 @@ export default function Home() {
             </div>
           </div>
           )}
+        </div>
+        <div ref={messagesEndRef} />
+        <div className="input-row-container">
+          <div className="input-row">
+            <form onSubmit={handleSubmit} className="message-input">
+              <div className="input-container">
+                <input
+                  type="text"
+                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
+                  value={userMessage}
+                  onChange={(e) => setUserMessage(e.target.value)}
+                />
+                {userMessage.trim() ? (
+                  <Button type="submit" className="send-button">
+                    <SendIcon />
+                  </Button>
+                ) : (
+                  voiceRecordIconVisible &&
+                  <Tooltip title={isRecording ? 
+                    (language === 'en' ? 'Click to stop recording' : 'Klikni da isključiš snimanje') : 
+                    (language === 'en' ? 'Click to start recording' : 'Klikni da započneš snimanje')}>
+                    <Button
+                      className={`send-button ${isRecording ? 'recording' : ''}`}
+                      onClick={handleVoiceClick}
+                    >
+                      <KeyboardVoiceIcon />
+                    </Button>
+                  </Tooltip>
+                )}
+              </div>
+            </form>
+            <Tooltip title={!openSpeedDial ? (language === 'en' ? 'More options' : 'Više opcija') : ''} placement="top">
+              <SpeedDial
+                ariaLabel="SpeedDial basic example"
+                className="speed-dial"
+                icon={<SpeedDialIcon />}
+                onClick={handleToggle}
+                open={openSpeedDial} 
+              >
+                {actions
+                  .filter(action => action !== false)
+                  .map((action) => (
+                    <SpeedDialAction
+                      key={typeof action.name === 'string' ? action.name : action.name.toString()}
+                      icon={action.icon}
+                      tooltipTitle={action.name}
+                      onClick={handleActionClick(action.onClick)}
+                    />
+                ))}
+              </SpeedDial>
+            </Tooltip>
+            <input
+              id="fileInput"
+              type="file"
+              multiple
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+          </div>
           {!isAssistantResponding && userSuggestQuestions.length > 0 && suggestQuestions && (
             <div className="suggested-questions">
               {userSuggestQuestions.map((question, index) => (
@@ -831,16 +892,18 @@ export default function Home() {
                   key={index}
                   variant="outlined"
                   onClick={() => handleSuggestedQuestionClick(question)}
-                  style={{ marginBottom: '10px', borderColor: 'white' }}
+                  style={{ 
+                    borderColor: 'white', 
+                    marginBottom: '10px',
+                    animation: 'fadeIn 0.2s ease-in-out 0.2s', 
+                    animationFillMode: 'both',
+                    borderRadius: '20px'}}
                 >
                   {question}
                 </Button>
               ))}
             </div>
           )}
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="input-row-container">
           {messages.length === 0 && initialQuestionsVisible && (
               <div className="initial-questions" style={{  marginBottom: '10px', marginLeft: '10px' }}>
                 {initialFirstQuestion && (
@@ -854,7 +917,8 @@ export default function Home() {
                     borderColor: 'white', 
                     marginBottom: '10px',
                     animation: 'fadeIn 0.2s ease-in-out 0.2s', 
-                    animationFillMode: 'both' }}
+                    animationFillMode: 'both',
+                    borderRadius: '20px'}}
                   >
                     {initialFirstQuestion}
                   </Button>
@@ -870,66 +934,15 @@ export default function Home() {
                     borderColor: 'white', 
                     marginBottom: '5px',
                     animation: 'fadeIn 0.3s ease-in-out 0.3s',
-                    animationFillMode: 'both' }}
+                    animationFillMode: 'both',
+                    borderRadius: '20px'}}
                   >
                     {initialSecondQuestion}
                   </Button>
                 )}
               </div>
           )}
-          <div className="input-row">
-            <form onSubmit={handleSubmit} className="message-input">
-              <div className="input-container">
-                <input
-                  type="text"
-                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
-                  value={userMessage}
-                  onChange={(e) => setUserMessage(e.target.value)}
-                />
-                {userMessage.trim() ? (
-                  <Button type="submit" className="send-button">
-                    <SendIcon />
-                  </Button>
-                ) : (
-                  <Tooltip title={isRecording ? 
-                    (language === 'en' ? 'Click to stop recording' : 'Klikni da isključiš snimanje') : 
-                    (language === 'en' ? 'Click to start recording' : 'Klikni da započneš snimanje')}>
-                    <Button
-                      className={`send-button ${isRecording ? 'recording' : ''}`}
-                      onClick={handleVoiceClick}
-                    >
-                      <KeyboardVoiceIcon />
-                    </Button>
-                  </Tooltip>
-                )}
-              </div>
-            </form>
-            <SpeedDial
-              ariaLabel="SpeedDial basic example"
-              className="speed-dial"
-              icon={<SpeedDialIcon />}
-              onClick={handleToggle}
-              open={openSpeedDial} 
-            >
-              {actions
-                .filter(action => action !== false)
-                .map((action) => (
-                  <SpeedDialAction
-                    key={typeof action.name === 'string' ? action.name : action.name.toString()}
-                    icon={action.icon}
-                    tooltipTitle={action.name}
-                    onClick={handleActionClick(action.onClick)}
-                  />
-              ))}
-            </SpeedDial>
-            <input
-              id="fileInput"
-              type="file"
-              multiple
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-            />
-          </div>
+          <div ref={messagesEndRef} />
         </div>
       </div>
     </div>

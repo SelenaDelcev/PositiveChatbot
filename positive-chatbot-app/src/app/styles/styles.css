@@ -143,6 +143,22 @@
 .custom-link {
   color: var(--custom-link-color);
 }
+.suggested-questions,
+.initial-questions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  padding: 5px 10px;
+  width: 95%;
+}
+
+.suggested-question-button:hover,
+.initial-question-button:hover {
+  background-color: var(--user-bg-color);
+}
+.input-row-container {
+  margin-bottom: 5px;
+}
 .input-row {
   display: flex;
   align-items: center;
