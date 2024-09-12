@@ -773,13 +773,14 @@ export default function Home() {
                           '& .MuiOutlinedInput-root': {
                             '& fieldset': {
                               borderColor: '#505050',
+                              marginTop: '10px'
                             },
                             '&:hover fieldset': {
                               borderColor: 'white',
                             },
                             '&.Mui-focused fieldset': {
                               borderColor: 'white',
-                              
+                              marginTop: '10px'          
                             },
                             color: '#ffff'      
                           },
@@ -788,6 +789,7 @@ export default function Home() {
                           },
                           '& .MuiInputLabel-root.Mui-focused': {
                             color: '#ffff',
+                            marginTop: '10px'
                           }
                         }}
                       />
