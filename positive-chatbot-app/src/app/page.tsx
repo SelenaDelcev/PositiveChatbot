@@ -175,6 +175,8 @@ export default function Home() {
 
   const handleToggle = () => {
     setOpenSpeedDial(!openSpeedDial);
+    setInitialQuestionsVisible(openSpeedDial);
+    setSuggestQuestions(openSpeedDial);
   };
 
   const handleActionClick = (actionOnClick: () => void) => (event: React.MouseEvent) => {
@@ -899,7 +901,8 @@ export default function Home() {
                     marginBottom: '10px',
                     animation: 'fadeIn 0.2s ease-in-out 0.2s', 
                     animationFillMode: 'both',
-                    borderRadius: '20px'}}
+                    borderRadius: '20px',
+                    fontSize: '12px'}}
                 >
                   {question}
                 </Button>
@@ -920,7 +923,8 @@ export default function Home() {
                     marginBottom: '10px',
                     animation: 'fadeIn 0.2s ease-in-out 0.2s', 
                     animationFillMode: 'both',
-                    borderRadius: '20px'}}
+                    borderRadius: '20px',
+                    fontSize: '12px'}}
                   >
                     {initialFirstQuestion}
                   </Button>
@@ -937,7 +941,8 @@ export default function Home() {
                     marginBottom: '5px',
                     animation: 'fadeIn 0.3s ease-in-out 0.3s',
                     animationFillMode: 'both',
-                    borderRadius: '20px'}}
+                    borderRadius: '20px',
+                    fontSize: '12px'}}
                   >
                     {initialSecondQuestion}
                   </Button>
