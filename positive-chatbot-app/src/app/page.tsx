@@ -895,10 +895,10 @@ export default function Home() {
                   key={index}
                   variant="outlined"
                   onClick={() => handleSuggestedQuestionClick(question)}
-                  style={{ 
-                    borderColor: 'white', 
+                  style={{
+                    border: 'none', 
                     marginBottom: '10px',
-                    animation: 'fadeIn 0.2s ease-in-out 0.2s', 
+                    animation: 'fadeIn 0.3s ease-in-out 0.3s',
                     animationFillMode: 'both',
                     borderRadius: '20px',
                     fontSize: '12px'}}
@@ -917,13 +917,13 @@ export default function Home() {
                       handleSuggestedQuestionClick(initialFirstQuestion);
                       setInitialQuestionsVisible(false);
                     }}
-                    style={{ 
-                    borderColor: 'white', 
-                    marginBottom: '10px',
-                    animation: 'fadeIn 0.2s ease-in-out 0.2s', 
-                    animationFillMode: 'both',
-                    borderRadius: '20px',
-                    fontSize: '12px'}}
+                    style={{
+                      border: 'none',
+                      marginBottom: '10px',
+                      animation: 'fadeIn 0.3s ease-in-out 0.3s', 
+                      animationFillMode: 'both',
+                      borderRadius: '20px',
+                      fontSize: '12px'}}
                   >
                     {initialFirstQuestion}
                   </Button>
@@ -935,13 +935,13 @@ export default function Home() {
                       handleSuggestedQuestionClick(initialSecondQuestion);
                       setInitialQuestionsVisible(false);
                     }}
-                    style={{ 
-                    borderColor: 'white', 
-                    marginBottom: '5px',
-                    animation: 'fadeIn 0.3s ease-in-out 0.3s',
-                    animationFillMode: 'both',
-                    borderRadius: '20px',
-                    fontSize: '12px'}}
+                    style={{
+                      border: 'none', 
+                      marginBottom: '10px',
+                      animation: 'fadeIn 0.3s ease-in-out 0.3s', 
+                      animationFillMode: 'both',
+                      borderRadius: '20px',
+                      fontSize: '12px'}}
                   >
                     {initialSecondQuestion}
                   </Button>

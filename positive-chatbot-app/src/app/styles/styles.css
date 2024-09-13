@@ -150,18 +150,14 @@
   margin-top: 10px;
   padding: 5px 10px;
   width: 95%;
-  opacity: 0.8;
-  transition: opacity 0.3s ease-in-out;
 }
-
-.suggested-question:hover,
-.initial-question:hover {
-  background-color: var(--user-bg-color);
-  color: var(--primary-font-color);
-}
-.suggested-question-button:hover,
-.initial-question-button:hover {
-  opacity: 1;
+.suggested-questions button:hover,
+.initial-questions button:hover {
+  background-color: var(--assistant-bg-color);
+  color: white;
+  transform: scale(1.05);
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .input-row-container {
   margin-bottom: 5px;
@@ -171,7 +167,8 @@
   align-items: center;
   padding: 5px 10px;
   margin-bottom: 5px;
-  background-color: var(--primary-inputrow-color); 
+  background-color: var(--primary-inputrow-color);
+  border: 1px solid white;
   border-radius: 20px;
   margin-left: 11px;
   width: 95%;
