@@ -368,14 +368,16 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>, message?: string): Promise<void> => {
+    if (e) e.preventDefault();
+
+    const finalMessage = message || userMessage;
 
     setInitialQuestionsVisible(false);
 
     const newMessage: { role: string; content: string; files: File[] } = {
       role: 'user',
-      content: userMessage,
+      content: finalMessage,
       files: files,
     };
     setLikeStatus(null);
