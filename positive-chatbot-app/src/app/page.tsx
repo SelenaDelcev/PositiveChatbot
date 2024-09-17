@@ -426,6 +426,20 @@ export default function Home() {
     }
   };
 
+  useEffect(() => {
+    const handleIncomingMessage = (event: MessageEvent) => {
+        if (event.data.type === 'SEND_MESSAGE' && event.data.message) {
+            handleSubmit(event.data.message);
+        }
+    };
+
+    window.addEventListener('message', handleIncomingMessage);
+
+    return () => {
+        window.removeEventListener('message', handleIncomingMessage);
+    };
+}, [handleSubmit]);
+
   const handleSuggestedQuestionClick = async (question: any) => {
     const newMessage = {
       role: 'user',
@@ -698,7 +712,7 @@ export default function Home() {
   ];
 
    return (
-    <div className="App">
+    <div className="App" style={{ overflow: 'hidden' }}>
       <div className="chat-container">
         <div className="messages" ref={containerRef}>
           {messages.map((message, index) => (
@@ -953,4 +967,4 @@ export default function Home() {
       </div>
     </div>
   );
-};
+}
