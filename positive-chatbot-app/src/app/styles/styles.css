@@ -74,6 +74,24 @@
   font-weight: 300;
   letter-spacing: 1px;
 }
+.expanding-textarea {
+  width: 100%;
+  resize: none;
+  border: none;
+  min-height: 40px;
+  background-color: var(--primary-inputrow-color); 
+  color: var(--primary-font-color);
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.expanding-textarea:focus {
+  outline: none;
+  box-shadow: none;
+}
 .assistant-avatar {
   display: flex;
   align-items: center;

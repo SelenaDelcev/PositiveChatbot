@@ -851,12 +851,23 @@ export default function Home() {
           <div className="input-row">
             <form onSubmit={handleSubmit} className="message-input">
               <div className="input-container">
-                <input
-                  type="text"
-                  placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
-                  value={userMessage}
-                  onChange={(e) => setUserMessage(e.target.value)}
-                />
+              <textarea
+                rows={1} // Početna visina
+                placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
+                value={userMessage}
+                onChange={(e) => {
+                  setUserMessage(e.target.value);
+                  e.target.style.height = 'auto';
+                  e.target.style.height = `${e.target.scrollHeight}px`; 
+                }}
+                onKeyDown={(e: any) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e); 
+                  }
+                }}
+                className="expanding-textarea"
+              />
                 {userMessage.trim() ? (
                   <Button type="submit" className="send-button">
                     <SendIcon />
