@@ -88,6 +88,9 @@
   box-sizing: border-box;
   overflow: hidden;
 }
+.expanding-textarea::placeholder{
+  color: #ffff;
+}
 .expanding-textarea:focus {
   outline: none;
   box-shadow: none;
