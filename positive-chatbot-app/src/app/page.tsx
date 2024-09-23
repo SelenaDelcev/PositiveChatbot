@@ -60,7 +60,7 @@ export default function Home() {
   const [inputRowColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
   const [customLinkColor] = useState(process.env.NEXT_PUBLIC_CUSTOM_LINK_COLOR);
-  const [baseUrl] = useState('https://delfi-chatapp-be.azurewebsites.net');
+  const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
   const [backgroundStartRgb] = useState(hexToRgb(backgroundColor));
   const [backgroundEndRgb] = useState(hexToRgb(backgroundColor));
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -70,9 +70,9 @@ export default function Home() {
   const [saveIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_SAVE_ICON === 'true');
   const [suggestQuestionsIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_SUGGEST_QUESTIONS_ICON === 'true');
   const [audioResponseIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_AUDIO_RESPONSE_ICON === 'true');
-  const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(true);
-  const [initialFirstQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_1 || 'Gde se nalaze vaše knjižare u Beogradu?');
-  const [initialSecondQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_2 || 'Koji je status moje porudžbine?');
+  const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(process.env.NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS === 'true');
+  const [initialFirstQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_1 || '');
+  const [initialSecondQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_2 || '');
   const [feedbackIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_FEEDBACK === 'true');
   const [voiceRecordIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON === 'true');
   const [orderMessage, setOrderMessage] = useState<boolean>(false);
