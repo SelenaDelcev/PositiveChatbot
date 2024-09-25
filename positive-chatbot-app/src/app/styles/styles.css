@@ -76,6 +76,7 @@
 }
 .expanding-textarea {
   width: 100%;
+  height: auto;
   resize: none;
   border: none;
   min-height: 40px;

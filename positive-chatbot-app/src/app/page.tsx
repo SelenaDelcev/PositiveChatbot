@@ -389,6 +389,11 @@ export default function Home() {
     setMessages((prevMessages: { role: string; content: string; type?: string }[]) => [...prevMessages, newMessage]);
     setShowTypingIndicator(true);
 
+    const textareaElement = document.querySelector('.expanding-textarea') as HTMLTextAreaElement;
+    if (textareaElement) {
+        textareaElement.style.height = '40px';
+    }
+
     if (files.length > 0) {
       await handleFileSubmit(newMessage);
     } else {
@@ -903,7 +908,7 @@ export default function Home() {
             <form onSubmit={handleSubmit} className="message-input">
               <div className="input-container">
               <textarea
-                rows={1} // Početna visina
+                rows={1}
                 placeholder={language === 'en' ? 'How can I help you?' : 'Kako mogu da ti pomognem?'}
                 value={userMessage}
                 onChange={(e) => {
