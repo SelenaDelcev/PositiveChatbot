@@ -47,6 +47,8 @@ jobs:
           NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS: ${{ secrets.POSITIVE_SHOW_INITIAL_QUESTIONS }}
           NEXT_PUBLIC_INITIAL_QUESTION_1: ${{ secrets.POSITIVE_INITIAL_QUESTION_1 }}
           NEXT_PUBLIC_INITIAL_QUESTION_2: ${{ secrets.POSITIVE_INITIAL_QUESTION_2 }}
+          NEXT_PUBLIC_INITIAL_QUESTION_ENG_1: ${{ secrets.POSITIVE_INITIAL_QUESTION_ENG_1 }}
+          NEXT_PUBLIC_INITIAL_QUESTION_ENG_2: ${{ secrets.POSITIVE_INITIAL_QUESTION_ENG_2 }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
