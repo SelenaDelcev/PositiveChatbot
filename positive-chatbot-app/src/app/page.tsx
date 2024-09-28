@@ -73,6 +73,8 @@ export default function Home() {
   const [initialQuestionsVisible, setInitialQuestionsVisible] = useState(process.env.NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS === 'true');
   const [initialFirstQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_1 || '');
   const [initialSecondQuestion] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_2 || '');
+  const [initialFirstQuestionEng] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_ENG_1 || '');
+  const [initialSecondQuestionEng] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_ENG_2 || '');
   const [feedbackIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_FEEDBACK === 'true');
   const [voiceRecordIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON === 'true');
   const [orderMessage, setOrderMessage] = useState<boolean>(false);
@@ -132,7 +134,7 @@ export default function Home() {
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      console.log(event)
+      console.log("Novi event:", event)
       if (event.data.type === 'main-url') {
         const path = event.data.url;
         const isEnglish = path.includes('/en/') || path.endsWith('/en');
@@ -146,6 +148,10 @@ export default function Home() {
       window.removeEventListener('message', handleMessage);
     };
   }, []);
+
+  useEffect(() => {
+    console.log('Language changed to:', language);
+  }, [language]);
 
   const handleScroll = () => {
     if (containerRef.current) {
@@ -1008,7 +1014,7 @@ export default function Home() {
                       borderRadius: '20px',
                       fontSize: '12px'}}
                   >
-                    {initialFirstQuestion}
+                    {language === 'en' ? initialFirstQuestionEng : initialFirstQuestion}
                   </Button>
                 )}
                 {initialSecondQuestion && (
@@ -1026,7 +1032,7 @@ export default function Home() {
                       borderRadius: '20px',
                       fontSize: '12px'}}
                   >
-                    {initialSecondQuestion}
+                    {language === 'en' ? initialSecondQuestionEng : initialSecondQuestion}
                   </Button>
                 )}
               </div>
