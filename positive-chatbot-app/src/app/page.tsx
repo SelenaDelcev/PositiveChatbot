@@ -45,7 +45,9 @@ export default function Home() {
   const [audioResponse, setAudioResponse] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [audioBase64, setAudioBase64] = useState<string | null>(null);
-  const [language, setLanguage] = useState<string>('sr');
+  const [language, setLanguage] = useState<string>(() => {
+    return localStorage.getItem('language') || 'sr';
+  });
   const [showTypingIndicator, setShowTypingIndicator] = useState<boolean>(false);
   const [openSpeedDial, setOpenSpeedDial] = useState<boolean>(false);
   const [feedback, setFeedback] = useState<string>('');
@@ -154,13 +156,6 @@ export default function Home() {
     localStorage.setItem('language', language);
     console.log('Language:', language);
   }, [language]);
-
-  useEffect(() => {
-    const storedLanguage = localStorage.getItem('language');
-    if (storedLanguage) {
-      setLanguage(storedLanguage);
-    }
-  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = () => {
