@@ -137,7 +137,8 @@ export default function Home() {
       console.log("Novi event:", event)
       if (event.data.type === 'main-url') {
         const path = event.data.url;
-        const isEnglish = path.includes('/en/') || path.endsWith('/en');
+        const url = new URL(path);
+        const isEnglish = url.pathname.includes('/en/') || url.pathname.endsWith('/en') || url.hash.includes('/en') || url.search.includes('lang=en');
         setLanguage(isEnglish ? 'en' : 'sr');
       }
     };
@@ -150,8 +151,28 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log('Language changed to:', language);
+    localStorage.setItem('language', language);
+    console.log('Language:', language);
   }, [language]);
+
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem('language');
+    if (storedLanguage) {
+      setLanguage(storedLanguage);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem('language');
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleScroll = () => {
     if (containerRef.current) {
