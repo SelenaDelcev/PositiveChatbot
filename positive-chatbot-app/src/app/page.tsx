@@ -1024,7 +1024,7 @@ export default function Home() {
                   <Button
                     variant="outlined"
                     onClick={() => {
-                      handleSuggestedQuestionClick(initialFirstQuestion);
+                      handleSuggestedQuestionClick(language === 'en' ? initialFirstQuestionEng : initialFirstQuestion);
                       setInitialQuestionsVisible(false);
                     }}
                     style={{
@@ -1042,7 +1042,7 @@ export default function Home() {
                   <Button
                     variant="outlined"
                     onClick={() => {
-                      handleSuggestedQuestionClick(initialSecondQuestion);
+                      handleSuggestedQuestionClick(language === 'en' ? initialSecondQuestionEng : initialSecondQuestion);
                       setInitialQuestionsVisible(false);
                     }}
                     style={{
