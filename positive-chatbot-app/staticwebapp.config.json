@@ -1,0 +1,12 @@
+{
+    "routes": [
+      {
+        "route": "/*",
+        "headers": {
+          "Access-Control-Allow-Origin": "https://positive.rs",
+          "Access-Control-Allow-Methods": "*",
+          "Access-Control-Allow-Headers": "*"
+        }
+      }
+    ]
+  }
