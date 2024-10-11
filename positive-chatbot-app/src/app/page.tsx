@@ -78,7 +78,7 @@ export default function Home() {
   const [feedbackIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_FEEDBACK === 'true');
   const [voiceRecordIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON === 'true');
   const [showInitialMessages] = useState<boolean>(process.env.NEXT_PUBLIC_SHOW_INITIAL_ASSISTANT_MESSAGES === 'true');
-  const [initialAssistantMessagesArray] = useState<string[]>([process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES || '']);
+  const [initialAssistantMessagesArray] = useState<string[]>(JSON.parse(process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES || '[]'));
   const [orderMessage, setOrderMessage] = useState<boolean>(false);
 
   function hexToRgb(hex: any) {
