@@ -77,6 +77,8 @@ export default function Home() {
   const [initialSecondQuestionEng] = useState(process.env.NEXT_PUBLIC_INITIAL_QUESTION_ENG_2 || '');
   const [feedbackIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_FEEDBACK === 'true');
   const [voiceRecordIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON === 'true');
+  const [showInitialMessages] = useState<boolean>(process.env.NEXT_PUBLIC_SHOW_INITIAL_ASSISTANT_MESSAGES === 'true');
+  const [initialAssistantMessagesArray] = useState<string[]>([process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES || '']);
   const [orderMessage, setOrderMessage] = useState<boolean>(false);
 
   function hexToRgb(hex: any) {
@@ -148,6 +150,17 @@ export default function Home() {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
+  }, []);
+
+  useEffect(() => {
+    if (showInitialMessages && initialAssistantMessagesArray.length > 0) {
+      const assistantMessages = initialAssistantMessagesArray.map((messageContent) => ({
+        role: 'assistant',
+        content: messageContent,
+      }));
+
+      setMessages(assistantMessages);
+    }
   }, []);
 
   useEffect(() => {
