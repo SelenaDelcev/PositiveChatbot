@@ -974,7 +974,8 @@ export default function Home() {
                   voiceRecordIconVisible &&
                   <Tooltip title={isRecording ? 
                     (language === 'en' ? 'Click to stop recording' : 'Klikni da isključiš snimanje') : 
-                    (language === 'en' ? 'Click to start recording' : 'Klikni da započneš snimanje')}>
+                    (language === 'en' ? 'Click to start recording' : 'Klikni da započneš snimanje')}
+                    placement="top">
                     <Button
                       className={`send-button ${isRecording ? 'recording' : ''}`}
                       onClick={handleVoiceClick}
