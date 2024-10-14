@@ -421,10 +421,9 @@ export default function Home() {
     setInitialQuestionsVisible(false);
     handleToggle();
 
-    const newMessage: { role: string; content: string; files: File[] } = {
+    const newMessage: { role: string; content: string } = {
       role: 'user',
-      content: finalMessage,
-      files: files,
+      content: finalMessage
     };
     setLikeStatus(null);
     setFeedbackVisible(false);
@@ -439,62 +438,57 @@ export default function Home() {
         textareaElement.style.height = '40px';
     }
 
-    if (files.length > 0) {
-      await handleFileSubmit(newMessage);
-    } else {
-      try {
-        let response: AxiosResponse<any, any>;
-        let orderMess: any;
-        let assistantMessage: { role: string; content: string; files: File[] } | undefined;
+    try {
+      let response: AxiosResponse<any, any>;
+      let orderMess: any;
+      let assistantMessage: { role: string; content: string; files: File[] } | undefined;
 
-        if(orderMessage) { 
-          orderMess = `Koji je status moje porudžbine broj ${newMessage.content}`;
-          assistantMessage = {
-            role: 'user',
-            content: orderMess,
-            files: files,
-          };
-        }
-
-        const messageToSend = orderMessage && assistantMessage ? (setOrderMessage(false), assistantMessage) : newMessage;
- 
-        response = await axios.post(
-          `${baseUrl}/chat`,
-          {
-            message: messageToSend,
-            suggest_questions: suggestQuestions,
-            play_audio_response: audioResponse,
-            language: language,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Session-ID': sessionId,
-            },
-            withCredentials: true,
-          }
-        );
-
-        const data: { calendly?: string; suggested_questions?: string[] } = response.data;
-
-        if (data && data.calendly) {
-          setMessages((prevMessages: { role: string; content: string; type?: string }[]) => [
-            ...prevMessages,
-            { role: 'assistant', content: data.calendly ?? '', type: 'text' },
-          ]);
-          setShowTypingIndicator(false);
-        } else {
-          getEventSource();
-        }
-
-        if (data.suggested_questions) {
-          setUserSuggestQuestions(data.suggested_questions.filter((q: string) => q.trim() !== ''));
-        } else {
-          setUserSuggestQuestions([]);
-        }
-      } catch (error: unknown) {
-        console.error('Network or Server Error:', error);
+      if(orderMessage) { 
+        orderMess = `Koji je status moje porudžbine broj ${newMessage.content}`;
+        assistantMessage = {
+          role: 'user',
+          content: orderMess,
+          files: files,
+        };
       }
+
+      const messageToSend = orderMessage && assistantMessage ? (setOrderMessage(false), assistantMessage) : newMessage;
+ 
+      response = await axios.post(`${baseUrl}/chat`,
+        {
+          message: messageToSend,
+          suggest_questions: suggestQuestions,
+          play_audio_response: audioResponse,
+          language: language,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Session-ID': sessionId,
+          },
+          withCredentials: true,
+        }
+      );
+
+      const data: { calendly?: string; suggested_questions?: string[] } = response.data;
+
+      if (data && data.calendly) {
+        setMessages((prevMessages: { role: string; content: string; type?: string }[]) => [
+          ...prevMessages,
+          { role: 'assistant', content: data.calendly ?? '', type: 'text' },
+        ]);
+        setShowTypingIndicator(false);
+      } else {
+        getEventSource();
+      }
+
+      if (data.suggested_questions) {
+        setUserSuggestQuestions(data.suggested_questions.filter((q: string) => q.trim() !== ''));
+      } else {
+        setUserSuggestQuestions([]);
+      }
+    } catch (error: unknown) {
+      console.error('Network or Server Error:', error);
     }
   };
 
@@ -511,6 +505,17 @@ export default function Home() {
         window.removeEventListener('message', handleIncomingMessage);
     };
 }, [handleSubmit]);
+
+const handleDownloadFile = (file: File) => {
+  const url = URL.createObjectURL(file);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = file.name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+};
 
   const handleSuggestedQuestionClick = async (question: any) => {
     if (question == 'Koji je status moje porudžbine?') {
@@ -554,7 +559,6 @@ export default function Home() {
     setUserSuggestQuestions([]);
   
     if (files.length > 0) {
-      await handleFileSubmit(newMessage);
     } else {
       try { 
         const response = await axios.post(`${baseUrl}/chat`, {
@@ -629,22 +633,19 @@ export default function Home() {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files) as File[];
       setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      handleFileSubmit(selectedFiles);
+      const newMessage = {
+        role: 'user',
+        content: '',
+        files: selectedFiles,
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     }
   };
 
-  const handleFileDelete = (index: any) => {
-    setFiles(prevFiles => {
-      const updatedFiles = prevFiles.filter((_, i) => i !== index);
-      return updatedFiles;
-    });
-  };
-
-  const handleFileSubmit = async (newMessage: any) => {
-    if (!files) return;
-
+  const handleFileSubmit = async (selectedFiles: File[]) => {
     const formData = new FormData();
-    files.forEach(file => formData.append('files', file));
-    formData.append('message', newMessage.content);
+    selectedFiles.forEach(file => formData.append('files', file));
 
     try {
       const response = await axios.post(`${baseUrl}/upload`, formData, {
@@ -657,9 +658,7 @@ export default function Home() {
       const data = response.data;
       if (data && data.detail) {
         handleErrorMessage(data.detail);
-      } else {
-        getEventSource();
-      }
+      } 
     } catch (error) {
       console.error('File upload error:', error);
     }
@@ -780,28 +779,9 @@ export default function Home() {
       icon: (
         <div style={{ position: 'relative' }}>
           <AttachFileSharpIcon style={{ color: files.length > 0 ? 'red' : 'inherit' }} />
-          {files.length > 0 && (
-            files.map((file, index) => (
-              <div key={index} style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <CancelOutlinedIcon
-                  style={{
-                    position: 'absolute',
-                    top: -5,
-                    right: -5,
-                    cursor: 'pointer',
-                    color: '#8695a3'
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleFileDelete(index);
-                  }}
-                />
-              </div>
-            ))
-          )}
         </div>
       ),
-      name: files.length > 0 ? files.map(file => <p key={file.name}>{file.name}</p>) : (language === 'en' ? 'Attach files' : 'Dodaj priloge'),
+      name: (language === 'en' ? 'Attach files' : 'Dodaj priloge') as string,
       onClick: () => {
         const fileInput = document.getElementById('fileInput');
         if (fileInput) {
@@ -833,14 +813,21 @@ export default function Home() {
                 {message.type === 'error' ? (
                   <Alert variant="outlined" severity="error" style={{ color: 'red' }}>{message.content}</Alert>
                 ) : (
-                  <Tooltip
-                    title={typeof tooltipText[index] === 'string' && tooltipText[index] !== '' ? tooltipText[index] : language === 'en' ? 'Copy to clipboard' : 'Klikni da kopiraš tekst'}
-                    placement="top"
-                    arrow
-                  >
-                    <div>
-                      <div onClick={() => handleCopyToClipboard(message.content, index)}>
+                  <div>
+                    <div onClick={() => {
+                      if (message.files && message.files.length > 0) {
+                        message.files.forEach((file: File) => handleDownloadFile(file));
+                      } else {
+                        handleCopyToClipboard(message.content, index);
+                      }
+                    }}>
+                      <Tooltip
+                        title={typeof tooltipText[index] === 'string' && tooltipText[index] !== '' ? tooltipText[index] : language === 'en' ? 'Copy to clipboard' : 'Klikni da kopiraš tekst'}
+                        placement="top"
+                        arrow
+                      >
                         <p dangerouslySetInnerHTML={getMessageContent(message)} />
+                      </Tooltip>
                       </div>
                       {message.files && message.files.length > 0 && (
                         <div className="attached-files" onClick={() => handleCopyToClipboard(message.content, index)}>
@@ -850,6 +837,7 @@ export default function Home() {
                               label={file.name}
                               icon={getFileTypeIcon(file)}
                               size="small"
+                              onClick={() => handleDownloadFile(file)}
                             />
                           ))}
                         </div>
@@ -861,7 +849,6 @@ export default function Home() {
                         </audio>
                       )}
                     </div>
-                  </Tooltip>
                 )}
               {feedbackIconVisible && message.role === 'assistant' && index === messages.length - 1 && (
                 <div className="feedback-buttons">
@@ -1001,7 +988,7 @@ export default function Home() {
                   .filter(action => action !== false)
                   .map((action) => (
                     <SpeedDialAction
-                      key={typeof action.name === 'string' ? action.name : action.name.toString()}
+                      key={typeof action.name === 'string' ? action.name : action.name}
                       icon={action.icon}
                       tooltipTitle={action.name}
                       onClick={handleActionClick(action.onClick)}
