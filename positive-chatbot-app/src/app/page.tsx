@@ -38,6 +38,7 @@ export default function Home() {
   const [files, setFiles] = useState<File[]>([]);
   const [tooltipText, setTooltipText] = useState<Record<string, unknown>>({});
   const [suggestQuestions, setSuggestQuestions] = useState<boolean>(false);
+  const [suggestQuestionsVisible, setSuggestQuestionsVisible] = useState<boolean>(true);
   const [userSuggestQuestions, setUserSuggestQuestions] = useState<string[]>([]);
   const [isAssistantResponding, setIsAssistantResponding] = useState<boolean>(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -219,6 +220,7 @@ export default function Home() {
   const handleToggle = () => {
     setOpenSpeedDial(!openSpeedDial);
     setInitialQuestionsVisible(openSpeedDial);
+    setSuggestQuestionsVisible(openSpeedDial);
   };
 
   const handleActionClick = (actionOnClick: () => void) => (event: React.MouseEvent) => {
@@ -417,6 +419,7 @@ export default function Home() {
     const finalMessage = message || userMessage;
 
     setInitialQuestionsVisible(false);
+    handleToggle();
 
     const newMessage: { role: string; content: string; files: File[] } = {
       role: 'user',
@@ -1014,7 +1017,7 @@ export default function Home() {
               onChange={handleFileChange}
             />
           </div>
-          {!isAssistantResponding && userSuggestQuestions.length > 0 && suggestQuestions && (
+          {!isAssistantResponding && userSuggestQuestions.length > 0 && suggestQuestions && suggestQuestionsVisible && (
             <div className="suggested-questions">
               {userSuggestQuestions.map((question, index) => (
                 <Button
@@ -1027,7 +1030,8 @@ export default function Home() {
                     animation: 'fadeIn 0.3s ease-in-out 0.3s',
                     animationFillMode: 'both',
                     borderRadius: '20px',
-                    fontSize: '12px'}}
+                    fontSize: '13px',
+                    textTransform: 'none'}}
                 >
                   {question}
                 </Button>
