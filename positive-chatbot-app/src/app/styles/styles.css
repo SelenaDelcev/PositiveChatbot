@@ -83,7 +83,7 @@
   background-color: var(--primary-inputrow-color) !important; 
   color: var(--primary-font-color);
   border: none;
-  padding: 10px;
+  padding: 9px;
   font-size: 16px;
   border-radius: 20px;
   box-sizing: border-box;
@@ -406,7 +406,7 @@ button:disabled:hover {
     margin-right: 5px; 
   }
   .message-input input[type="text"] {
-    font-size: 0.57rem; 
+    font-size: 0.857rem; 
     padding: 8px;
   }
 }
