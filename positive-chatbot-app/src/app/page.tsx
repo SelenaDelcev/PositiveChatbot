@@ -80,6 +80,7 @@ export default function Home() {
   const [voiceRecordIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON === 'true');
   const [showInitialMessages] = useState<boolean>(process.env.NEXT_PUBLIC_SHOW_INITIAL_ASSISTANT_MESSAGES === 'true');
   const [initialAssistantMessagesArray] = useState<string[]>(JSON.parse(process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES || '[]'));
+  const [initialAssistantMessagesArrayEng] = useState<string[]>(JSON.parse(process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES_ENG || '[]'));
   const [orderMessage, setOrderMessage] = useState<boolean>(false);
 
   function hexToRgb(hex: any) {
@@ -155,14 +156,18 @@ export default function Home() {
 
   useEffect(() => {
     if (showInitialMessages && initialAssistantMessagesArray.length > 0) {
-      const assistantMessages = initialAssistantMessagesArray.map((messageContent) => ({
-        role: 'assistant',
-        content: messageContent,
-      }));
+      const selectedMessagesArray = language === 'en' ? initialAssistantMessagesArrayEng : initialAssistantMessagesArray;
 
-      setMessages(assistantMessages);
+      if (selectedMessagesArray.length > 0) {
+        const assistantMessages = selectedMessagesArray.map((messageContent) => ({
+          role: 'assistant',
+          content: messageContent,
+        }));
+  
+        setMessages(assistantMessages);
+      }
     }
-  }, []);
+  }, [showInitialMessages, language, initialAssistantMessagesArray, initialAssistantMessagesArrayEng]);
 
   useEffect(() => {
     localStorage.setItem('language', language);
