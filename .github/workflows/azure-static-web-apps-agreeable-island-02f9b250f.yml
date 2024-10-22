@@ -32,6 +32,7 @@ jobs:
           api_location: "" 
           output_location: ""
         env:
+          NODE_VERSION: '20.x'
           NEXT_PUBLIC_AXIOS_URL: ${{ secrets.POSITIVE_AXIOS_URL }}
           NEXT_PUBLIC_PRIMARY_BG_COLOR: ${{ secrets.POSITIVE_PRIMARY_BG_COLOR }}
           NEXT_PUBLIC_PRIMARY_FONT_COLOR: ${{ secrets.POSITIVE_PRIMARY_FONT_COLOR }}
