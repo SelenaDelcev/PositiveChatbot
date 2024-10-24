@@ -52,7 +52,7 @@ export default function Home() {
   const [feedback, setFeedback] = useState<string>('');
   const [likeStatus, setLikeStatus] = useState<'Good' | 'Bad' | null>(null);
   const [feedbackVisible, setFeedbackVisible] = useState<boolean>(false);
-  const [backgroundColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR);
+  const [backgroundColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_BG_COLOR || '#3d3d3d');
   const [backgroundImage] = useState(process.env.NEXT_PUBLIC_BACKGROUND_IMAGE || '');
   const [avatarImage] = useState(process.env.NEXT_PUBLIC_AVATAR_IMAGE);
   const [fontColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_FONT_COLOR);
@@ -399,22 +399,28 @@ export default function Home() {
     setAudioResponse(!audioResponse);
   };
 
-  const getFileTypeIcon = (file: any) => {
-    const fileExtension = file.name.split('.').pop().toLowerCase();
+  const getFileTypeIcon = (file: File) => {
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    const isImage = file.type.startsWith('image/');
+  
+    if (isImage) {
+      return (
+        <img
+          src={URL.createObjectURL(file)}
+          alt={file.name}
+          style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
+        />
+      );
+    }
   
     switch (fileExtension) {
       case 'pdf':
-        return <Image src='/icons/pdf-icon.png' alt="PDF" width={24} height={24} />;
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif':
-        return <Image src='/icons/gallery-icon.png' alt="File" width={24} height={24}/>;
+        return <Image src="/icons/pdf-icon.png" alt="PDF" width={24} height={24} />;
       case 'doc':
       case 'docx':
-        return <Image src='/icons/doc-icon.png' alt="Document" width={24} height={24}/>;
+        return <Image src="/icons/doc-icon.png" alt="Document" width={24} height={24} />;
       default:
-        return <Image src='/icons/default-icon.png' alt="File" width={24} height={24}/>;
+        return <Image src="/icons/default-icon.png" alt="File" width={24} height={24} />;
     }
   };
 
@@ -836,15 +842,27 @@ const handleDownloadFile = (file: File) => {
                       </div>
                       {message.files && message.files.length > 0 && (
                         <div className="attached-files" onClick={() => handleCopyToClipboard(message.content, index)}>
-                          {message.files.map((file, fileIndex) => (
-                            <Chip
-                              key={fileIndex}
-                              label={file.name}
-                              icon={getFileTypeIcon(file)}
-                              size="small"
-                              onClick={() => handleDownloadFile(file)}
-                            />
-                          ))}
+                          {message.files.map((file, fileIndex) => {
+                            const isImage = file.type.startsWith('image/');
+                            
+                            return isImage ? (
+                              <img
+                                key={fileIndex}
+                                src={URL.createObjectURL(file)}
+                                alt={file.name}
+                                style={{ width: '200px', height: '250px', objectFit: 'contain', borderRadius: '4px' }}
+                                onClick={() => handleDownloadFile(file)}
+                              />
+                            ) : (
+                              <Chip
+                                key={fileIndex}
+                                label={file.name}
+                                icon={getFileTypeIcon(file)}
+                                size="small"
+                                onClick={() => handleDownloadFile(file)}
+                              />
+                            );
+                          })}
                         </div>
                       )}
                       {message.role === 'assistant' && audioResponse && audioBase64 && index === messages.length - 1 && !isAssistantResponding && (
