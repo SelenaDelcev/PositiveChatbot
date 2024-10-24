@@ -16,6 +16,11 @@ jobs:
           submodules: true
           lfs: false
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '20.x'
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -27,6 +32,7 @@ jobs:
           api_location: "" 
           output_location: ""
         env:
+          NODE_VERSION: '20.x'
           NEXT_PUBLIC_AXIOS_URL: ${{ secrets.POSITIVE_AXIOS_URL }}
           NEXT_PUBLIC_PRIMARY_BG_COLOR: ${{ secrets.POSITIVE_PRIMARY_BG_COLOR }}
           NEXT_PUBLIC_PRIMARY_FONT_COLOR: ${{ secrets.POSITIVE_PRIMARY_FONT_COLOR }}
@@ -51,6 +57,7 @@ jobs:
           NEXT_PUBLIC_INITIAL_QUESTION_ENG_2: ${{ secrets.POSITIVE_INITIAL_QUESTION_ENG_2 }}
           NEXT_PUBLIC_SHOW_INITIAL_ASSISTANT_MESSAGES: ${{ secrets.POSITIVE_SHOW_INITIAL_ASSISTANT_MESSAGES }}
           NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES: ${{ secrets.POSITIVE_INITIAL_ASSISTANT_MESSAGES }}
+          NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES_ENG: ${{ secrets.POSITIVE_INITIAL_ASSISTANT_MESSAGES_ENG }}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
