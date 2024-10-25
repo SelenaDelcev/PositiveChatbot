@@ -61,12 +61,12 @@ export default function Home() {
   const [inputRowColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR);
   const [sendButtonColor] = useState(process.env.NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR);
   const [customLinkColor] = useState(process.env.NEXT_PUBLIC_CUSTOM_LINK_COLOR);
-  const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL);
+  const [baseUrl] = useState(process.env.NEXT_PUBLIC_AXIOS_URL || "http://localhost:8000");
   const [backgroundStartRgb] = useState(hexToRgb(backgroundColor));
   const [backgroundEndRgb] = useState(hexToRgb(backgroundColor));
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [userScrolled, setUserScrolled] = useState<boolean>(false);
-  const [deleteIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_DELETE_ICON === 'true');
+  const [deleteIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_DELETE_ICON === 'true' || true);
   const [attachFileIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_ATTACH_FILE_ICON === 'true');
   const [saveIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_SAVE_ICON === 'true');
   const [suggestQuestionsIconVisible] = useState(process.env.NEXT_PUBLIC_SHOW_SUGGEST_QUESTIONS_ICON === 'true');
@@ -517,16 +517,16 @@ export default function Home() {
     };
 }, [handleSubmit]);
 
-const handleDownloadFile = (file: File) => {
-  const url = URL.createObjectURL(file);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = file.name;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-};
+  const handleDownloadFile = (file: File) => {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   const handleSuggestedQuestionClick = async (question: any) => {
     if (question == 'Koji je status moje porudžbine?') {
