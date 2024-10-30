@@ -165,6 +165,13 @@
 .custom-link {
   color: var(--custom-link-color);
 }
+.livechat {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  padding: 5px 10px;
+  width: 98%;
+}
 .suggested-questions,
 .initial-questions {
   display: flex;
@@ -174,7 +181,8 @@
   width: 95%;
 }
 .suggested-questions button:hover,
-.initial-questions button:hover {
+.initial-questions button:hover,
+.livechat button:hover {
   background-color: var(--assistant-bg-color);
   color: white;
   transform: scale(1.05);

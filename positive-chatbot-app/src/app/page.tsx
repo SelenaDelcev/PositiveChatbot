@@ -82,6 +82,9 @@ export default function Home() {
   const [initialAssistantMessagesArray] = useState<string[]>(JSON.parse(process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES || '[]'));
   const [initialAssistantMessagesArrayEng] = useState<string[]>(JSON.parse(process.env.NEXT_PUBLIC_INITIAL_ASSISTANT_MESSAGES_ENG || '[]'));
   const [orderMessage, setOrderMessage] = useState<boolean>(false);
+  const [liveChatAllowed] = useState(process.env.NEXT_PUBLIC_LIVE_CHAT_ALLOWED === 'true' || false);
+  const [liveChatButtonVisible, setLiveChatButtonVisible] = useState(false);
+  const [liveChatOpen, setLiveChatOpen] = useState(false);
 
   function hexToRgb(hex: any) {
     const bigint = parseInt(hex.slice(1), 16);
@@ -568,6 +571,8 @@ export default function Home() {
     setMessages(prevMessages => [...prevMessages, newMessage]);
     setShowTypingIndicator(true);
     setUserSuggestQuestions([]);
+    if(liveChatAllowed)
+      setLiveChatButtonVisible(true);
   
     if (files.length > 0) {
     } else {
@@ -807,6 +812,33 @@ export default function Home() {
 
    return (
     <div className="App" style={{ overflow: 'hidden' }}>
+    {liveChatOpen ? (
+        <div className="iframe-container" style={{ height: '100vh', overflow: 'hidden' }}>
+          <iframe
+            src="https://tawk.to/chat/66e6323050c10f7a00aa2b4b/1i7pj83k2"
+            className="live-chat-iframe"
+            title="Live Chat"
+            style={{ width: '100%', height: '90%', border: 'none' }}
+          />
+          <div className='livechat'>
+            <Button
+              className="livechat"
+              variant="outlined"
+              onClick={() => setLiveChatOpen(false)}
+              style={{
+                border: 'none',
+                marginTop: '10px',
+                animation: 'fadeIn 0.3s ease-in-out 0.3s',
+                animationFillMode: 'both',
+                borderRadius: '20px',
+                fontSize: '12px'
+              }}
+            >
+              Vrati se na chatbot-a
+            </Button>
+          </div>
+        </div>
+      ) : (
       <div className="chat-container">
         <div className="messages" ref={containerRef}>
           {messages.map((message, index) => (
@@ -1088,9 +1120,29 @@ export default function Home() {
                 )}
               </div>
           )}
+          {liveChatButtonVisible && (
+              <div className='livechat'>
+                <Button
+                  variant="outlined"
+                  onClick={() => setLiveChatOpen(true)}
+                  style={{
+                    border: 'none',
+                    marginBottom: '10px',
+                    animation: 'fadeIn 0.3s ease-in-out 0.3s',
+                    animationFillMode: 'both',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    justifyContent: 'center'
+                  }}
+                >
+                  Uključi operatera
+                </Button>
+                </div>
+            )}
           <div ref={messagesEndRef} />
         </div>
       </div>
+    )}
     </div>
   );
 }
