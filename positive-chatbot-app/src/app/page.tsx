@@ -430,7 +430,11 @@ export default function Home() {
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>, message?: string): Promise<void> => {
     if (e) e.preventDefault();
 
-    const finalMessage = message || userMessage;
+    const finalMessage = message || userMessage.trim();
+
+    if (!finalMessage) {
+      return; // Do nothing if the message is empty
+    }
 
     setInitialQuestionsVisible(false);
     handleToggle();
