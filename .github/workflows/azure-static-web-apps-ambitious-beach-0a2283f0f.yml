@@ -1,0 +1,66 @@
+name: Azure Static Web Apps CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+jobs:
+  build_and_deploy_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: Build and Deploy Job
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          lfs: false
+      - name: Build And Deploy
+        id: builddeploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AMBITIOUS_BEACH_0A2283F0F }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }} 
+          action: "upload"
+          app_location: "./positive-chatbot-app"
+          api_location: "" 
+          output_location: ""
+        env:
+          NODE_VERSION: '20.x'
+          NEXT_PUBLIC_AXIOS_URL: ${{ secrets.ECD_AXIOS_URL }}
+          NEXT_PUBLIC_PRIMARY_BG_COLOR: ${{ secrets.ECD_PRIMARY_BG_COLOR }}
+          NEXT_PUBLIC_PRIMARY_FONT_COLOR: ${{ secrets.ECD_PRIMARY_FONT_COLOR }}
+          NEXT_PUBLIC_USER_BG_COLOR: ${{ secrets.ECD_USER_BG_COLOR }}
+          NEXT_PUBLIC_ASSISTANT_BG_COLOR: ${{ secrets.ECD_ASSISTANT_BG_COLOR }}
+          NEXT_PUBLIC_BACKGROUND_IMAGE: ${{ secrets.ECD_BACKGROUND_IMAGE }}
+          NEXT_PUBLIC_AVATAR_IMAGE: ${{ secrets.ECD_AVATAR_IMAGE }}
+          NEXT_PUBLIC_PRIMARY_INPUTROW_COLOR: ${{ secrets.ECD_PRIMARY_INPUTROW_COLOR }}
+          NEXT_PUBLIC_PRIMARY_SENDBUTTON_COLOR: ${{ secrets.ECD_PRIMARY_SENDBUTTON_COLOR }}
+          NEXT_PUBLIC_CUSTOM_LINK_COLOR: ${{ secrets.ECD_CUSTOM_LINK_COLOR }}
+          NEXT_PUBLIC_SHOW_DELETE_ICON: ${{ secrets.ECD_SHOW_DELETE_ICON }}
+          NEXT_PUBLIC_SHOW_ATTACH_FILE_ICON: ${{ secrets.ECD_SHOW_ATTACH_FILE_ICON }}
+          NEXT_PUBLIC_SHOW_SAVE_ICON: ${{ secrets.ECD_SHOW_SAVE_ICON }}
+          NEXT_PUBLIC_SHOW_SUGGEST_QUESTIONS_ICON: ${{ secrets.ECD_SHOW_SUGGEST_QUESTIONS_ICON }}
+          NEXT_PUBLIC_SHOW_AUDIO_RESPONSE_ICON: ${{ secrets.ECD_SHOW_AUDIO_RESPONSE_ICON }}
+          NEXT_PUBLIC_SHOW_FEEDBACK: ${{ secrets.ECD_SHOW_FEEDBACK }}
+          NEXT_PUBLIC_SHOW_VOICE_RECORD_ICON: ${{ secrets.ECD_SHOW_VOICE_RECORD_ICON }}
+          NEXT_PUBLIC_SHOW_INITIAL_QUESTIONS: ${{ secrets.ECD_SHOW_INITIAL_QUESTIONS }}
+          NEXT_PUBLIC_INITIAL_QUESTION_1: ${{ secrets.ECD_INITIAL_QUESTION_1 }}
+          NEXT_PUBLIC_INITIAL_QUESTION_2: ${{ secrets.ECD_INITIAL_QUESTION_2 }}
+          NEXT_PUBLIC_LIVE_CHAT_ALLOWED: ${{ secrets.ECD_LIVE_CHAT_ALLOWED }}
+
+  close_pull_request_job:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: Close Pull Request Job
+    steps:
+      - name: Close Pull Request
+        id: closepullrequest
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AMBITIOUS_BEACH_0A2283F0F }}
+          action: "close"
